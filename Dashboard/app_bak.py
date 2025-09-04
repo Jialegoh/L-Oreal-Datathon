@@ -86,14 +86,7 @@ with tab3:
 with tab4:
     st.subheader("Word Cloud of Comments")
     text = "positive helpful great amazing love bad awful toxic fun engaging high-quality insightful"
-    wordcloud = WordCloud(width=800, height=400, background_color="white").generate(text)
+    wordcloud = WordCloud(width=400, height=100, background_color="white").generate(text)
     plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
     st.pyplot(plt)
-
-all_labels = [label for sublist in df["predicted_labels"] for label in sublist]
-label_counts = Counter(all_labels)
-label_df = pd.DataFrame(label_counts.items(), columns=["label","count"])
-
-fig = px.bar(label_df, x="label", y="count", title="Predicted Comment Categories")
-st.plotly_chart(fig, use_container_width=True)
