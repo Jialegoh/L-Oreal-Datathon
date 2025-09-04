@@ -4,12 +4,6 @@ import plotly.express as px
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from collections import Counter
-import os
-import sys
-
-# Importing from sibling directories
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from AI_Model.CommentCategory.commentCategoryPredict import predict
 
 # Page configuration
 st.set_page_config(page_title="AI Glow-rithms", layout="wide")
@@ -31,7 +25,6 @@ df = pd.DataFrame({
     "timestamp": pd.date_range("2024-01-01", periods=10, freq="D")
 })
 df["total_engagement"] = df[["likes","shares","saves","comments"]].sum(axis=1)
-df["predicted_labels"] = predict(df["textOriginal"].tolist(), threshold=0.5)
 
 # Sidebar 
 st.sidebar.header("Filters")
@@ -91,7 +84,7 @@ with tab3:
 
 # tab 4: WordCloud
 with tab4:
-    st.subheader("Word Cloud of Comments (Mock)")
+    st.subheader("Word Cloud of Comments")
     text = "positive helpful great amazing love bad awful toxic fun engaging high-quality insightful"
     wordcloud = WordCloud(width=800, height=400, background_color="white").generate(text)
     plt.imshow(wordcloud, interpolation="bilinear")
@@ -104,27 +97,3 @@ label_df = pd.DataFrame(label_counts.items(), columns=["label","count"])
 
 fig = px.bar(label_df, x="label", y="count", title="Predicted Comment Categories")
 st.plotly_chart(fig, use_container_width=True)
-
-# tab 5: AI Model Predictions
-with tab5:
-    st.subheader("AI Model Predictions")
-
-    # Show table
-    st.write("Predicted Categories per Comment")
-    st.dataframe(df[["comment_id","textOriginal","predicted_labels"]])
-
-    # Distribution of all predicted labels
-    from collections import Counter
-    all_labels = [label for sublist in df["predicted_labels"] for label in sublist]
-    if all_labels:
-        label_counts = Counter(all_labels)
-        label_df = pd.DataFrame(label_counts.items(), columns=["label","count"])
-        fig6 = px.bar(label_df, x="label", y="count", title="Predicted Comment Categories", text="count")
-        st.plotly_chart(fig6, use_container_width=True)
-
-    # Custom comment prediction
-    st.subheader("Try Your Own Comment")
-    user_text = st.text_area("Enter a comment:", "This video was super helpful and fun!")
-    if st.button("Analyse Comment"):
-        custom_pred = predict([user_text], threshold=0.5)
-        st.success(f"Predicted categories: {custom_pred[0]}")
