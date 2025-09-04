@@ -11,6 +11,20 @@ st.title("Dashboard")
 st.markdown("Analyse the quality and relevance of comments through Share of Engagement (SoE)")
 
 # Load data
+df = pd.DataFrame({
+    "comment_id": range(1, 11),
+    "post_id": [101,102,101,103,104,102,105,101,106,107],
+    "likes": [20, 50, 10, 5, 40, 12, 70, 22, 8, 15],
+    "shares": [5, 15, 2, 1, 6, 2, 20, 3, 0, 5],
+    "saves": [2, 10, 1, 0, 4, 1, 15, 2, 1, 3],
+    "comments": [10, 25, 5, 3, 12, 4, 30, 6, 2, 7],
+    "sentiment": ["positive","negative","neutral","positive","positive",
+                  "negative","positive","neutral","negative","positive"],
+    "quality_score": [0.8,0.3,0.6,0.9,0.7,0.4,0.95,0.5,0.2,0.85],
+    "timestamp": pd.date_range("2024-01-01", periods=10, freq="D")
+})
+df["total_engagement"] = df[["likes","shares","saves","comments"]].sum(axis=1)
+
 
 # Sidebar 
 st.sidebar.header("Filters")
