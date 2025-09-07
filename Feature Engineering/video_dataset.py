@@ -76,15 +76,6 @@ df_videos['comments_per_view'] = df_videos['commentCount'] / df_videos['viewCoun
 
 df_videos['favourites_per_view'] = df_videos['favouriteCount'] / df_videos['viewCount']
 
-# 4.2 Sentiment analysis for the title and description (using TextBlob)
-df_videos['title_sentiment_score'] = df_videos['title'].apply(lambda x: TextBlob(x).sentiment.polarity)
-df_videos['description_sentiment_score'] = df_videos['description'].apply(lambda x: TextBlob(x).sentiment.polarity)
-
-# 4.3 Sentiment analysis (VADER for compound score) for title and description
-sid = SentimentIntensityAnalyzer()
-df_videos['title_sentiment_score_vader'] = df_videos['title'].apply(lambda x: sid.polarity_scores(x)['compound'])
-df_videos['description_sentiment_score_vader'] = df_videos['description'].apply(lambda x: sid.polarity_scores(x)['compound'])
-
 # 4.5 Video Popularity Score (combined measure of views, likes, favourites, and comments)
 df_videos['popularity_score'] = (df_videos['viewCount'] + df_videos['likeCount'] + df_videos['favouriteCount'] + df_videos['commentCount']) / 4
 
