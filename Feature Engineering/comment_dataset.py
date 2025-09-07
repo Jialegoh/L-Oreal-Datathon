@@ -35,18 +35,6 @@ df_comments['hashtag_count'] = df_comments['textOriginal'].apply(lambda x: len(r
 # Mentions count
 df_comments['mention_count'] = df_comments['textOriginal'].apply(lambda x: len(re.findall(r"@\w+", x)))  # using regex
 
-# 4.2 Sentiment analysis (TextBlob for sentiment polarity)
-df_comments['sentiment_score'] = df_comments['textOriginal'].apply(lambda x: TextBlob(x).sentiment.polarity)  # Sentiment score from -1 to +1
-
-# 4.3 Sentiment analysis (VADER for compound score)
-sid = SentimentIntensityAnalyzer()
-df_comments['sentiment_score_vader'] = df_comments['textOriginal'].apply(lambda x: sid.polarity_scores(x)['compound'])  # Sentiment from -1 to +1
-
-# 4.4 Reaction-based engagement (Positive, Negative, Neutral)
-df_comments['positive_reaction'] = df_comments['sentiment_score_vader'].apply(lambda x: 1 if x > 0 else 0)
-df_comments['negative_reaction'] = df_comments['sentiment_score_vader'].apply(lambda x: 1 if x < 0 else 0)
-df_comments['neutral_reaction'] = df_comments['sentiment_score_vader'].apply(lambda x: 1 if x == 0 else 0)
-
 # 4.5 Time of Day Features (hour, day of week, weekend)
 df_comments['publishedAt'] = pd.to_datetime(df_comments['publishedAt'], errors='coerce')  # Ensure it's in datetime format
 df_comments['hour_of_day'] = df_comments['publishedAt'].dt.hour  # Hour of the day (0-23)
