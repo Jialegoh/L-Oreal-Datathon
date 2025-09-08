@@ -1,0 +1,5 @@
+average_type,precision,recall,f1_score,support
+micro avg,0.45,0.66,0.53,410398
+macro avg,0.13,0.53,0.14,410398
+weighted avg,0.92,0.66,0.74,410398
+samples avg,0.45,0.64,0.52,410398
