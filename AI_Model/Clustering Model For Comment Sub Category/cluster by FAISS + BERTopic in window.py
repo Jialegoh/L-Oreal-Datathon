@@ -33,13 +33,13 @@ print(f"✅ After spam filter: {len(df)} rows")
 # ------------------------------
 # 2.5. Sample data for faster processing
 # ------------------------------
-SAMPLE_SIZE = 500000  # Adjust this based on your needs (50K is good for testing)
-if len(df) > SAMPLE_SIZE:
-    print(f"Stage 2.5: Sampling {SAMPLE_SIZE} comments for faster processing...")
-    df = df.sample(n=SAMPLE_SIZE, random_state=42).reset_index(drop=True)
-    print(f"✅ Using sample of {len(df)} comments")
-else:
-    print(f"✅ Dataset is small enough ({len(df)} rows), using full data")
+# SAMPLE_SIZE = 500000  # Adjust this based on your needs (50K is good for testing)
+# if len(df) > SAMPLE_SIZE:
+#     print(f"Stage 2.5: Sampling {SAMPLE_SIZE} comments for faster processing...")
+#     df = df.sample(n=SAMPLE_SIZE, random_state=42).reset_index(drop=True)
+#     print(f"✅ Using sample of {len(df)} comments")
+# else:
+#     print(f"✅ Dataset is small enough ({len(df)} rows), using full data")
 
 # ------------------------------
 # 3. Encode comments with memory-efficient approach
