@@ -195,7 +195,13 @@ with tab4:
         # Remove URLs and mentions/hashtags markers but keep words
         series = series.str.replace(r"https?://\S+", " ", regex=True)
         series = series.str.replace(r"[@#]", " ", regex=True)
-        text_joined = " \n ".join(series.tolist()).lower()
+        
+        # Process text in smaller batches to avoid MemoryError
+        def batched_text_join(series, batch_size=10000):
+            for start in range(0, len(series), batch_size):
+                batch = series[start:start+batch_size]
+                yield " \n ".join(batch.tolist()).lower()
+        text_joined = " ".join(batched_text_join(series))
 
         # Tokenize to words (letters and apostrophes)
         tokens = re.findall(r"[a-zA-Z][a-zA-Z']+", text_joined)
@@ -442,8 +448,6 @@ with tab6:
     st.markdown("**Dataset Overview**")
     st.markdown("The commentVideoMerged.csv file was created by merging the comment and video files on video_id and channel_id.")
     st.divider()
-    
-
 
     # Per-label performance (Top 10 by frequency)
     st.markdown("**Per-Category Performance (Top 10 by frequency)**")
