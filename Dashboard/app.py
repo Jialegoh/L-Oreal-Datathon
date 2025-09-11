@@ -16,7 +16,6 @@ st.set_page_config(page_title="AI Glow-rithms", layout="wide")
 st.title("Dashboard")
 st.markdown("Analyse the quality and relevance of comments through Share of Engagement (SoE)")
 
-# Global white theme and UI polish
 try:
     # Plotly defaults for a clean white theme with L'Oréal accents
     px.defaults.template = "plotly_white"
@@ -197,6 +196,8 @@ df = _load_first_available_dataframe([
 if df.empty:
     st.info("No data file found. Place a CSV at one of the expected paths to populate the dashboard.")
 
+filtered_df = df.copy()
+
 # Adding tab for better orgnasation
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Trends", "WordCloud", "AI Model Predictions", "Classification Model", "Spam Detection"])
 
@@ -204,81 +205,103 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Tr
 with tab1:
     st.subheader("Key Metrics")
     col1, col2, col3 = st.columns(3)
-    col1.metric("Total Comments", len(df))
-    if "quality_score" in df.columns:
-        col2.metric("Avg Quality Score", f"{df['quality_score'].mean():.2f}")
-    if "relevance_score" in df.columns:
-        col3.metric("Avg Relevance Score", f"{df['relevance_score'].mean():.2f}")
+    col1.metric("Total Comments", len(filtered_df))
+    if "quality_score" in filtered_df.columns:
+        col2.metric("Avg Quality Score", f"{filtered_df['quality_score'].mean():.2f}")
+    if "relevance_score" in filtered_df.columns:
+        col3.metric("Avg Relevance Score", f"{filtered_df['relevance_score'].mean():.2f}")
+    st.divider()
+    st.download_button("Download filtered data as CSV", filtered_df.to_csv(index=False), "filtered_comments.csv")
+    st.divider()
+    # Sentiment Pie Chart
+    if "sentiment" in filtered_df.columns:
+        st.subheader("Sentiment Distribution (Pie Chart)")
+        sent_counts = filtered_df["sentiment"].value_counts().reset_index()
+        sent_counts.columns = ["sentiment", "count"]
+        fig_sent = px.pie(sent_counts, names="sentiment", values="count", title="Sentiment Distribution")
+        apply_brand_style(fig_sent)
+        st.plotly_chart(fig_sent, width='stretch')
+    # Spam Pie Chart
+    if "is_spam" in filtered_df.columns:
+        st.subheader("Spam vs Non-Spam (Pie Chart)")
+        spam_counts = filtered_df["is_spam"].astype(str).str.lower().value_counts().reset_index()
+        spam_counts.columns = ["is_spam", "count"]
+        fig_spam = px.pie(spam_counts, names="is_spam", values="count", title="Spam vs Non-Spam")
+        apply_brand_style(fig_spam)
+        st.plotly_chart(fig_spam, width='stretch')
+    # Top 10 Clusters/Categories Bar Chart
+    for col in ["new_cluster", "cluster", "predicted_category"]:
+        if col in filtered_df.columns:
+            st.subheader(f"Top 10 {col} Categories")
+            cat_counts = filtered_df[col].value_counts().head(10).reset_index()
+            cat_counts.columns = [col, "count"]
+            fig_cat = px.bar(cat_counts, x=col, y="count", title=f"Top 10 {col} Categories")
+            apply_brand_style(fig_cat)
+            st.plotly_chart(fig_cat, width='stretch')
+    # Quality Score Histogram
+    if "quality_score" in filtered_df.columns:
+        st.subheader("Quality Score Distribution (Histogram)")
+        fig_quality = px.histogram(filtered_df, x="quality_score", nbins=30, title="Quality Score Distribution")
+        apply_brand_style(fig_quality)
+        st.plotly_chart(fig_quality, width='stretch')
+    # Relevance Score Histogram
+    if "relevance_score" in filtered_df.columns:
+        st.subheader("Relevance Score Distribution (Histogram)")
+        fig_relevance = px.histogram(filtered_df, x="relevance_score", nbins=30, title="Relevance Score Distribution")
+        apply_brand_style(fig_relevance)
+        st.plotly_chart(fig_relevance, width='stretch')
 
 with tab2:
-    if "sentiment" in df.columns:
+    if "sentiment" in filtered_df.columns:
         st.subheader("Sentiment Distribution (Counts)")
-        sent_series = df["sentiment"].value_counts().reset_index()
+        sent_series = filtered_df["sentiment"].value_counts().reset_index()
         sent_series.columns = ["sentiment", "count"]
-        fig6 = px.bar(sent_series, x="sentiment", y="count",
-                      title="Sentiment Counts")
+        fig6 = px.bar(sent_series, x="sentiment", y="count", title="Sentiment Counts")
         apply_brand_style(fig6)
         st.plotly_chart(fig6, width='stretch', key="chart-sentiment-counts")
-        
-        # Sentiment table with textOriginal
-        if "textOriginal" in df.columns:
+        if "textOriginal" in filtered_df.columns:
             st.subheader("Comments by Sentiment")
-            
-            # Filter controls
-            col1, col2 = st.columns([2, 1])
-            with col1:
-                sentiment_filter_table = st.multiselect(
-                    "Filter by sentiment:",
-                    options=df["sentiment"].unique(),
-                    default=df["sentiment"].unique(),
-                    key="sentiment_table_filter"
-                )
-            with col2:
-                sample_size_sentiment = st.number_input(
-                    "Rows to show:", 
-                    min_value=11, 
-                    max_value=1000, 
-                    value=11, 
-                    step=10,
-                    key="sentiment_sample_size"
-                )
-            
-            # Filter and display data
-            df_sentiment = df[df["sentiment"].isin(sentiment_filter_table)]
-            display_cols = ["textOriginal", "sentiment"]
-            
-            # Add additional columns if available
-            if "post_id" in df.columns:
-                display_cols.insert(0, "post_id")
-            if "comment_id" in df.columns:
-                display_cols.insert(1, "comment_id")
-            
-            st.dataframe(
-                df_sentiment[display_cols].head(int(sample_size_sentiment)), 
-                width='stretch', 
-                height=400
-            )
-            
-            # Show sentiment counts for filtered data
-            if len(sentiment_filter_table) > 0:
-                filtered_counts = df_sentiment["sentiment"].value_counts()
-                st.write("**Sentiment counts in filtered data:**")
-                for sentiment, count in filtered_counts.items():
-                    st.write(f"- {sentiment}: {count}")
+            with st.expander("Show Comments Table", expanded=False):
+                col1, col2 = st.columns([2, 1])
+                with col1:
+                    sentiment_filter_table = st.multiselect(
+                        "Filter by sentiment:",
+                        options=filtered_df["sentiment"].unique(),
+                        default=filtered_df["sentiment"].unique(),
+                        key="sentiment_table_filter"
+                    )
+                with col2:
+                    sample_size_sentiment = st.number_input(
+                        "Rows to show:", 
+                        min_value=11, 
+                        max_value=1000, 
+                        value=11, 
+                        step=5,
+                        key="sentiment_sample_size"
+                    )
+                df_sentiment = filtered_df[filtered_df["sentiment"].isin(sentiment_filter_table)]
+                display_cols = ["textOriginal", "sentiment"]
+                if "post_id" in filtered_df.columns:
+                    display_cols.insert(0, "post_id")
+                if "comment_id" in filtered_df.columns:
+                    display_cols.insert(1, "comment_id")
+                st.dataframe(df_sentiment[display_cols].head(int(sample_size_sentiment)), width='stretch', height=400)
+                st.download_button("Download table as CSV", df_sentiment[display_cols].to_csv(index=False), "sentiment_comments.csv")
+                if len(sentiment_filter_table) > 0:
+                    filtered_counts = df_sentiment["sentiment"].value_counts()
+                    st.write("**Sentiment counts in filtered data:**")
+                    for sentiment, count in filtered_counts.items():
+                        st.write(f"- {sentiment}: {count}")
         else:
             st.info("No 'textOriginal' column found to display comments with sentiment.")
-
 
 # tab 3: Trends
 with tab3:
     st.subheader("Trends & Distributions")
-
-    # 2. Quality distribution if present
-    if "quality_score" in df.columns:
+    if "quality_score" in filtered_df.columns:
         st.subheader("Quality Score Distribution")
-        # Server-side aggregation using numpy histogram
         try:
-            counts, bin_edges = np.histogram(df["quality_score"].dropna().astype(float), bins=50)
+            counts, bin_edges = np.histogram(filtered_df["quality_score"].dropna().astype(float), bins=50)
             bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
             agg_df = pd.DataFrame({"bin": bin_centers, "count": counts})
             fig5 = px.bar(agg_df, x="bin", y="count", title="Distribution of Quality Scores")
@@ -288,16 +311,12 @@ with tab3:
             st.plotly_chart(fig5, width='stretch', key="chart-quality-dist")
         except Exception:
             pass
-
-    # 4. Category distribution (clusters/predictions)
     for col in ["new_cluster", "cluster", "predicted_category"]:
-        if col in df.columns:
+        if col in filtered_df.columns:
             st.subheader(f"Category Distribution — {col}")
-            # Server-side aggregated counts
-            cat_series = df[col].value_counts().reset_index()
+            cat_series = filtered_df[col].value_counts().reset_index()
             cat_series.columns = [col, "count"]
-            fig7 = px.bar(cat_series.head(10), x=col, y="count",
-                          title=f"Top 10 {col} categories")
+            fig7 = px.bar(cat_series.head(10), x=col, y="count", title=f"Top 10 {col} categories")
             apply_brand_style(fig7)
             st.plotly_chart(fig7, width='stretch', key=f"chart-cat-{col}")
 
