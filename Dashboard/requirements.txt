@@ -4,4 +4,8 @@ plotly
 wordcloud
 matplotlib
 stopwordsiso
+<<<<<<< HEAD
 setuptools>=58.0.0
+=======
+setuptools>=58.0.0
+>>>>>>> 2dad3e9e46e7b0ea06f6b5a94f483bc88c85b028

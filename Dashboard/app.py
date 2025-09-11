@@ -926,4 +926,8 @@ with tab7:
     else:
         st.info("No text column found to display spam comments.")
 
+<<<<<<< HEAD
 model_safetensors_path = os.getenv("MODEL_PATH")
+=======
+model_safetensors_path = os.getenv("MODEL_PATH")
+>>>>>>> 2dad3e9e46e7b0ea06f6b5a94f483bc88c85b028
