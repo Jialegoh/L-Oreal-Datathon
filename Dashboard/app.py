@@ -203,7 +203,6 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Tr
 # tab 1: Overview
 with tab1:
     st.subheader("Key Metrics")
-    st.subheader("Key Metrics")
     col1, col2, col3 = st.columns(3)
     col1.metric("Total Comments", len(df))
     if "quality_score" in df.columns:
@@ -211,27 +210,7 @@ with tab1:
     if "relevance_score" in df.columns:
         col3.metric("Avg Relevance Score", f"{df['relevance_score'].mean():.2f}")
 
-# tab 3: Trends
-with tab3:
-    st.subheader("Trends & Distributions")
-
-    # 2. Quality distribution if present
-    if "quality_score" in df.columns:
-        st.subheader("Quality Score Distribution")
-        # Server-side aggregation using numpy histogram
-        try:
-            counts, bin_edges = np.histogram(df["quality_score"].dropna().astype(float), bins=50)
-            bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
-            agg_df = pd.DataFrame({"bin": bin_centers, "count": counts})
-            fig5 = px.bar(agg_df, x="bin", y="count", title="Distribution of Quality Scores")
-            fig5.update_xaxes(title_text="quality_score")
-            fig5.update_yaxes(title_text="count")
-            apply_brand_style(fig5)
-            st.plotly_chart(fig5, width='stretch', key="chart-quality-dist")
-        except Exception:
-            pass
-
-    # 3. Sentiment distribution (already in tab2, but show again in trends)
+with tab2:
     if "sentiment" in df.columns:
         st.subheader("Sentiment Distribution (Counts)")
         sent_series = df["sentiment"].value_counts().reset_index()
@@ -257,9 +236,9 @@ with tab3:
             with col2:
                 sample_size_sentiment = st.number_input(
                     "Rows to show:", 
-                    min_value=10, 
+                    min_value=11, 
                     max_value=1000, 
-                    value=5, 
+                    value=11, 
                     step=10,
                     key="sentiment_sample_size"
                 )
@@ -288,6 +267,27 @@ with tab3:
                     st.write(f"- {sentiment}: {count}")
         else:
             st.info("No 'textOriginal' column found to display comments with sentiment.")
+
+
+# tab 3: Trends
+with tab3:
+    st.subheader("Trends & Distributions")
+
+    # 2. Quality distribution if present
+    if "quality_score" in df.columns:
+        st.subheader("Quality Score Distribution")
+        # Server-side aggregation using numpy histogram
+        try:
+            counts, bin_edges = np.histogram(df["quality_score"].dropna().astype(float), bins=50)
+            bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+            agg_df = pd.DataFrame({"bin": bin_centers, "count": counts})
+            fig5 = px.bar(agg_df, x="bin", y="count", title="Distribution of Quality Scores")
+            fig5.update_xaxes(title_text="quality_score")
+            fig5.update_yaxes(title_text="count")
+            apply_brand_style(fig5)
+            st.plotly_chart(fig5, width='stretch', key="chart-quality-dist")
+        except Exception:
+            pass
 
     # 4. Category distribution (clusters/predictions)
     for col in ["new_cluster", "cluster", "predicted_category"]:
@@ -455,7 +455,7 @@ with tab5:
                 index=0,
             )
         with right:
-            sample_size = st.number_input("Rows to show", min_value=10, max_value=1000, value=5, step=5)
+            sample_size = st.number_input("Rows to show", min_value=11, max_value=1000, value=11, step=5)
 
         df_view = df.copy()
         if selected_cluster != "(All)":
@@ -852,7 +852,7 @@ with tab7:
         with col1:
             show_spam_only = st.checkbox("Show only spam comments", value=True)
         with col2:
-            sample_size_spam = st.number_input("Rows to show", min_value=10, max_value=500, value=5, step=5)
+            sample_size_spam = st.number_input("Rows to show", min_value=11, max_value=500, value=11, step=5)
         with col3:
             if has_video_category and video_cat_col:
                 category_filter = st.selectbox("Filter by category", ["All"] + list(df[video_cat_col].unique()))
