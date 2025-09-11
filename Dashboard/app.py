@@ -227,7 +227,7 @@ with tab3:
             fig5.update_xaxes(title_text="quality_score")
             fig5.update_yaxes(title_text="count")
             apply_brand_style(fig5)
-            st.plotly_chart(fig5, use_container_width=True, key="chart-quality-dist")
+            st.plotly_chart(fig5, width='stretch', key="chart-quality-dist")
         except Exception:
             pass
 
@@ -239,7 +239,7 @@ with tab3:
         fig6 = px.bar(sent_series, x="sentiment", y="count",
                       title="Sentiment Counts")
         apply_brand_style(fig6)
-        st.plotly_chart(fig6, use_container_width=True, key="chart-sentiment-counts")
+        st.plotly_chart(fig6, width='stretch', key="chart-sentiment-counts")
         
         # Sentiment table with textOriginal
         if "textOriginal" in df.columns:
@@ -276,7 +276,7 @@ with tab3:
             
             st.dataframe(
                 df_sentiment[display_cols].head(int(sample_size_sentiment)), 
-                use_container_width=True, 
+                width='stretch', 
                 height=400
             )
             
@@ -299,7 +299,7 @@ with tab3:
             fig7 = px.bar(cat_series.head(10), x=col, y="count",
                           title=f"Top 10 {col} categories")
             apply_brand_style(fig7)
-            st.plotly_chart(fig7, use_container_width=True, key=f"chart-cat-{col}")
+            st.plotly_chart(fig7, width='stretch', key=f"chart-cat-{col}")
 
 # tab 4: WordCloud
 with tab4:
@@ -398,7 +398,7 @@ with tab4:
                         
                         # Calculate redundant keywords (words with same meaning/concept)
                         st.write(f"**{category} Keywords ({len(keywords)} unique words)**")
-                        st.dataframe(cat_df, use_container_width=True, height=200)
+                        st.dataframe(cat_df, width='stretch', height=200)
                         
                         # Show total count for this category
                         total_count = sum(keywords.values())
@@ -416,14 +416,14 @@ with tab4:
                         other_df = pd.DataFrame(uncategorized, columns=["keyword", "count"])
                         other_df = other_df.sort_values("count", ascending=False)
                         st.write(f"**Other Keywords ({len(uncategorized)} words)**")
-                        st.dataframe(other_df, use_container_width=True, height=200)
+                        st.dataframe(other_df, width='stretch', height=200)
                     else:
                         st.write("No uncategorized keywords found.")
 
             # Show top keywords (original view)
             st.subheader("All Keywords (Top 50)")
             top_df = pd.DataFrame(freq.most_common(50), columns=["keyword", "count"])
-            st.dataframe(top_df, use_container_width=True, height=240)
+            st.dataframe(top_df, width='stretch', height=240)
 
             # Generate word cloud from frequencies
             wc = WordCloud(width=1000, height=360, background_color="white")
@@ -465,7 +465,7 @@ with tab5:
         if baseline_col:
             display_cols.append(baseline_col)
 
-        st.dataframe(df_view[display_cols].head(int(sample_size)), use_container_width=True, height=420)
+        st.dataframe(df_view[display_cols].head(int(sample_size)), width='stretch', height=420)
 
 # tab 6: Classification Model (BERT multi-label)
 with tab6:
@@ -598,26 +598,26 @@ with tab6:
         df_show = per_label_from_clsrep.copy()
         if "support" in df_show.columns:
             df_show = df_show.sort_values("support", ascending=False).head(10)
-        st.dataframe(df_show, use_container_width=True, height=320)
+        st.dataframe(df_show, width='stretch', height=320)
         try:
             fig_f1 = px.bar(df_show, x="label", y="f1-score", title="Top-10 Categories by Support — F1 Scores")
             apply_brand_style(fig_f1)
-            st.plotly_chart(fig_f1, use_container_width=True, key="chart-cls-f1-top10")
+            st.plotly_chart(fig_f1, width='stretch', key="chart-cls-f1-top10")
         except Exception:
             pass
     elif os.path.exists(per_label_f1_path):
         per_label_df = pd.read_csv(per_label_f1_path)
-        st.dataframe(per_label_df, use_container_width=True, height=320)
+        st.dataframe(per_label_df, width='stretch', height=320)
         try:
             fig_f1 = px.bar(per_label_df, x="label", y="f1", title="Per-Label F1 Scores")
             apply_brand_style(fig_f1)
-            st.plotly_chart(fig_f1, use_container_width=True, key="chart-cls-f1-perlabel")
+            st.plotly_chart(fig_f1, width='stretch', key="chart-cls-f1-perlabel")
         except Exception:
             pass
     elif classes:
         st.info("No saved per-label metrics found. Provide classification_report.csv or per_label_f1.csv to visualize actual scores.")
         placeholder_df = pd.DataFrame({"label": classes, "f1": [None] * len(classes)})
-        st.dataframe(placeholder_df, use_container_width=True, height=320)
+        st.dataframe(placeholder_df, width='stretch', height=320)
 
     st.divider()
 
@@ -631,11 +631,11 @@ with tab6:
             comp = df_default.merge(df_tuned, on="label", how="inner")
             comp["delta"] = comp["f1_tuned"] - comp["f1_default"]
             comp_sorted = comp.sort_values("delta", ascending=False)
-            st.dataframe(comp_sorted, use_container_width=True, height=340)
+            st.dataframe(comp_sorted, width='stretch', height=340)
             # Chart: show improvement deltas (top 10)
             fig_delta = px.bar(comp_sorted.head(10), x="label", y="delta", title="Top-10 Improvements after Threshold Tuning")
             apply_brand_style(fig_delta)
-            st.plotly_chart(fig_delta, use_container_width=True, key="chart-cls-delta-tuning")
+            st.plotly_chart(fig_delta, width='stretch', key="chart-cls-delta-tuning")
         except Exception as e:
             st.info(f"Could not compute tuning comparison: {e}")
     else:
@@ -690,7 +690,7 @@ with tab6:
             top_df = pd.DataFrame(topk, columns=["label", "probability"])  # top-5 bar chart
             fig_top = px.bar(top_df, x="label", y="probability", range_y=[0,1], title="Top-5 Predicted Labels")
             apply_brand_style(fig_top)
-            st.plotly_chart(fig_top, use_container_width=True, key="chart-cls-topk")
+            st.plotly_chart(fig_top, width='stretch', key="chart-cls-topk")
 
             # Apply thresholds (if available) to show predicted categories
             if thresholds and isinstance(probs, np.ndarray):
@@ -725,7 +725,7 @@ with tab7:
         # Already server-side aggregated via value_counts
         fig_spam = px.bar(spam_series, x="is_spam", y="count", title="Spam vs Non-Spam Distribution")
         apply_brand_style(fig_spam)
-        st.plotly_chart(fig_spam, use_container_width=True, key="chart-spam-overall")
+        st.plotly_chart(fig_spam, width='stretch', key="chart-spam-overall")
     
     with col2:
         total_comments = len(df)
@@ -757,7 +757,7 @@ with tab7:
             spam_by_category = spam_by_category.sort_values("Spam_Rate", ascending=False)
             
             # Display table
-            st.dataframe(spam_by_category, use_container_width=True)
+            st.dataframe(spam_by_category, width='stretch')
             
             # Visualization
             agg_cat_df = spam_by_category.reset_index().copy()
@@ -769,7 +769,7 @@ with tab7:
                 barmode="stack"
             )
             apply_brand_style(fig_category)
-            st.plotly_chart(fig_category, use_container_width=True, key="chart-spam-bycat")
+            st.plotly_chart(fig_category, width='stretch', key="chart-spam-bycat")
             
             # Spam rate by category
             fig_rate = px.bar(
@@ -779,7 +779,7 @@ with tab7:
                 title="Spam Rate by Video Category (%)"
             )
             apply_brand_style(fig_rate)
-            st.plotly_chart(fig_rate, use_container_width=True, key="chart-spam-rate-bycat")
+            st.plotly_chart(fig_rate, width='stretch', key="chart-spam-rate-bycat")
 
     # Comment relevancy analysis
     st.subheader("Comment Relevancy Analysis")
@@ -797,7 +797,7 @@ with tab7:
             heat_df = heat_df[heat_df["count"] > 0]
             fig_relevance = px.density_heatmap(heat_df, x="quality", y="relevance", z="count", nbinsx=40, nbinsy=40, title="Quality vs Relevancy (binned)")
             apply_brand_style(fig_relevance)
-            st.plotly_chart(fig_relevance, use_container_width=True, key="chart-quality-vs-relevance-heat")
+            st.plotly_chart(fig_relevance, width='stretch', key="chart-quality-vs-relevance-heat")
         except Exception:
             pass
         
@@ -811,7 +811,7 @@ with tab7:
             fig_relevance_dist.update_xaxes(title_text="relevance_score")
             fig_relevance_dist.update_yaxes(title_text="count")
             apply_brand_style(fig_relevance_dist)
-            st.plotly_chart(fig_relevance_dist, use_container_width=True, key="chart-relevance-dist")
+            st.plotly_chart(fig_relevance_dist, width='stretch', key="chart-relevance-dist")
         except Exception:
             pass
         
@@ -837,7 +837,7 @@ with tab7:
             fig_quality.update_xaxes(title_text="quality_score")
             fig_quality.update_yaxes(title_text="count")
             apply_brand_style(fig_quality)
-            st.plotly_chart(fig_quality, use_container_width=True, key="chart-quality-dist-byspam")
+            st.plotly_chart(fig_quality, width='stretch', key="chart-quality-dist-byspam")
         except Exception:
             pass
     else:
@@ -877,7 +877,7 @@ with tab7:
         
         st.dataframe(
             df_filtered[display_cols].head(int(sample_size_spam)), 
-            use_container_width=True, 
+            width='stretch', 
             height=400
         )
         
@@ -900,4 +900,3 @@ with tab7:
                 st.metric("Spam Count", spam_count_filtered)
     else:
         st.info("No text column found to display spam comments.")
- 
