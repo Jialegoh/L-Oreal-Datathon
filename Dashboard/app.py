@@ -290,8 +290,10 @@ with tab2:
             if len(sentiment_filter_table) > 0:
                 filtered_counts = df_sentiment["sentiment"].value_counts()
                 st.write("**Sentiment counts in filtered data:**")
-                for sentiment, count in filtered_counts.items():
-                    st.write(f"- {sentiment}: {count}")
+                # Show sentiment counts as metrics
+                metric_cols = st.columns(len(filtered_counts))
+                for i, (sentiment, count) in enumerate(filtered_counts.items()):
+                    metric_cols[i].metric(f"{sentiment} Count", count)
         else:
             st.info("No 'textOriginal' column found to display comments with sentiment.")
 
@@ -926,8 +928,4 @@ with tab7:
     else:
         st.info("No text column found to display spam comments.")
 
-<<<<<<< HEAD
 model_safetensors_path = os.getenv("MODEL_PATH")
-=======
-model_safetensors_path = os.getenv("MODEL_PATH")
->>>>>>> 2dad3e9e46e7b0ea06f6b5a94f483bc88c85b028
