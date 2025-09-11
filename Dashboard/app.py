@@ -9,6 +9,7 @@ import json
 import numpy as np
 import re
 import stopwordsiso as stopwords_iso
+from dotenv import load_dotenv
 
 # Page configuration
 st.set_page_config(page_title="AI Glow-rithms", layout="wide")
@@ -925,3 +926,5 @@ with tab7:
                 st.metric("Spam Count", spam_count_filtered)
     else:
         st.info("No text column found to display spam comments.")
+
+model_safetensors_path = os.getenv("MODEL_PATH")
