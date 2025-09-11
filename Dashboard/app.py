@@ -428,8 +428,23 @@ with tab4:
                         # Show top 5 most frequent
                         if len(sorted_keywords) > 0:
                             st.write("**Top 5 most frequent:**")
-                            for j, (word, count) in enumerate(sorted_keywords[:5]):
-                                st.write(f"{j+1}. {word}: {count}")
+                            top5 = sorted_keywords[:5]
+                            icons = ["😛", "😁", "🥳", "😉", "😊"] 
+                            accent_colors = ["#C8A97E", "#B08968", "#8B5E3C", "#4B5563", "#9CA3AF"]
+                            metric_cols = st.columns(5)
+                            for idx, (word, count) in enumerate(top5):
+                                icon = icons[idx] if idx < len(icons) else ""
+                                color = accent_colors[idx] if idx < len(accent_colors) else "#111111"
+                                metric_cols[idx].markdown(
+                                    f"""
+                                    <div style="text-align:center;">
+                                        <span style="font-size:2.2em;">{icon}</span><br>
+                                        <span style="font-size:1.1em; color:{color}; font-weight:600;">{word.title()}</span><br>
+                                        <span style="font-size:1.3em; color:{color}; font-weight:700;">{count:,}</span>
+                                    </div>
+                                    """,
+                                    unsafe_allow_html=True,
+                                )
 
                 # Other/Uncategorized tab
                 with cat_tabs[-1]:
@@ -457,6 +472,7 @@ with tab4:
 # tab 5: AI Model Predictions (Clusters table + accuracy)
 with tab5:
     st.subheader("AI Model Predictions — Clusters Table")
+    st.write("Columns in loaded dataset:", df.columns.tolist())
 
     required_cols = {"textOriginal", "new_cluster"}
     if required_cols.issubset(df.columns):
