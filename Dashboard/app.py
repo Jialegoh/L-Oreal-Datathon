@@ -472,8 +472,7 @@ with tab4:
 # tab 5: AI Model Predictions (Clusters table + accuracy)
 with tab5:
     st.subheader("AI Model Predictions — Clusters Table")
-    st.write("Columns in loaded dataset:", df.columns.tolist())
-
+    
     required_cols = {"textOriginal", "new_cluster"}
     if required_cols.issubset(df.columns):
         # Optional baseline for accuracy
