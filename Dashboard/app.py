@@ -16,6 +16,158 @@ st.set_page_config(page_title="AI Glow-rithms", layout="wide")
 st.title("Dashboard")
 st.markdown("Analyse the quality and relevance of comments through Share of Engagement (SoE)")
 
+# Global white theme and UI polish
+try:
+    # Plotly defaults for a clean white theme with L'Oréal accents
+    px.defaults.template = "plotly_white"
+    px.defaults.color_discrete_sequence = [
+        "#111111",  # Brand Black
+        "#C8A97E",  # Brand Gold
+        "#4B5563",  # Charcoal gray
+        "#8B5E3C",  # Deep bronze
+        "#9CA3AF",  # Neutral gray
+        "#B08968"   # Soft bronze
+    ]
+    px.defaults.color_continuous_scale = [
+        "#111111", "#3A2F20", "#6D5639", "#9B7B55", "#C8A97E"
+    ]
+except Exception:
+    pass
+
+# Inject CSS to enhance visuals (white background, cards, spacing, typography)
+st.markdown(
+    """
+    <style>
+      :root{
+        --brand-black:#111111;
+        --brand-gold:#C8A97E;
+        --brand-charcoal:#4B5563;
+        --border:#e5e7eb;
+      }
+      /* Base */
+      .stApp { background-color: #ffffff; }
+      .block-container {
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
+        max-width: 1400px;
+      }
+      /* Typography */
+      h1, h2, h3 { color: var(--brand-black); }
+      h1 { font-weight: 700; letter-spacing: -0.01em; }
+      h2 { font-weight: 600; }
+      p, label, span, div { color: var(--brand-black); }
+      /* Heading accent */
+      h1:after{
+        content: "";
+        display: block;
+        width: 64px; height: 3px;
+        background: var(--brand-gold);
+        margin-top: 8px;
+        border-radius: 3px;
+      }
+      /* Tabs */
+      div[role="tablist"] > div {
+        background: #ffffff !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 10px rgba(17, 24, 39, 0.04);
+      }
+      button[role="tab"] { color: var(--brand-charcoal) !important; }
+      button[role="tab"][data-baseweb="tab-highlighted"] {
+        color: var(--brand-black) !important;
+        box-shadow: inset 0 -3px 0 0 var(--brand-gold);
+      }
+      /* Metric cards */
+      div[data-testid="stMetric"] {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 16px;
+        box-shadow: 0 2px 12px rgba(17, 24, 39, 0.06);
+        position: relative;
+      }
+      div[data-testid="stMetric"]:before{
+        content: "";
+        position: absolute; left: 0; top: 0; height: 4px; width: 100%;
+        background: linear-gradient(90deg, var(--brand-gold), rgba(200,169,126,0.2));
+        border-top-left-radius: 12px; border-top-right-radius: 12px;
+      }
+      /* Plotly charts */
+      div[data-testid="stPlotlyChart"] {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 8px;
+        box-shadow: 0 2px 12px rgba(17, 24, 39, 0.06);
+      }
+      /* Dataframes */
+      div[data-testid="stDataFrame"] {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(17, 24, 39, 0.06);
+      }
+      /* Inputs & selects */
+      .stTextInput, .stSelectbox, .stNumberInput, .stSlider { background: #ffffff; }
+      /* Primary buttons */
+      button[kind="primary"], .stButton>button {
+        background: var(--brand-black) !important;
+        color: #ffffff !important;
+        border-radius: 10px !important;
+        border: 1px solid var(--brand-black) !important;
+      }
+      .stButton>button:hover {
+        background: #000000 !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        border-color: var(--brand-gold) !important;
+      }
+      /* Subtle card utility for grouping */
+      .card {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 2px 12px rgba(17, 24, 39, 0.06);
+        margin-bottom: 1rem;
+        position: relative;
+      }
+      .card:before{
+        content: "";
+        position: absolute; left: 0; top: 0; height: 4px; width: 100%;
+        background: var(--brand-gold);
+        border-top-left-radius: 12px; border-top-right-radius: 12px;
+      }
+      /* Links */
+      a { color: var(--brand-black); }
+      a:hover { color: var(--brand-gold); }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Plotly brand styling helper
+BRAND_BLACK = "#111111"
+BRAND_GOLD = "#C8A97E"
+BRAND_COLORWAY = ["#111111", "#C8A97E", "#4B5563", "#8B5E3C", "#9CA3AF", "#B08968"]
+
+def apply_brand_style(fig):
+    try:
+        # Global layout
+        fig.update_layout(
+            colorway=BRAND_COLORWAY,
+            title_font_color=BRAND_BLACK,
+            font_color=BRAND_BLACK,
+            legend_title_font_color=BRAND_BLACK,
+            legend_font_color=BRAND_BLACK,
+        )
+        # If single trace, emphasize with brand gold
+        if hasattr(fig, "data") and len(fig.data) <= 1:
+            fig.update_traces(marker_color=BRAND_GOLD)
+            fig.update_traces(marker_line_color=BRAND_BLACK, marker_line_width=0.5)
+            fig.update_traces(line=dict(color=BRAND_BLACK, width=2.2))
+    except Exception:
+        pass
+
 # Load data from selectable sources (auto-priority)
 base_dir = os.path.dirname(__file__)
 project_root = os.path.normpath(os.path.join(base_dir, ".."))
@@ -26,23 +178,24 @@ default_path = os.path.join(base_dir, "comments_with_sentiment.csv")
 quality_path = os.path.join(ai_root, "QualityRelevanceSpamModel", "comments_evaluated.csv")
 cluster_path = os.path.join(ai_root, "Clustering Model For Comment Sub Category", "clustered_comments_reassigned.csv")
 
-# Priority: Clusters -> Quality -> Default
-candidates = [p for p in [cluster_path, quality_path, default_path] if os.path.exists(p)]
-if not candidates:
-    st.error("No data sources found. Please ensure CSV files exist in Dashboard or AI_Model folders.")
-    st.stop()
+# Load dataframe from the first available source
+def _load_first_available_dataframe(paths):
+    for path in paths:
+        if os.path.exists(path) and os.path.isfile(path):
+            try:
+                return pd.read_csv(path)
+            except Exception as e:
+                st.warning(f"Failed to read {os.path.basename(path)}: {e}")
+    return pd.DataFrame()
 
-selected_path = candidates[0]
-try:
-    df = pd.read_csv(selected_path)
-    st.sidebar.caption(f"Loaded dataset: {os.path.relpath(selected_path, project_root)}")
-except Exception as e:
-    st.error(f"Failed to read {selected_path}: {e}")
-    st.stop()
+df = _load_first_available_dataframe([
+    quality_path,
+    cluster_path,
+    default_path,
+])
 
-# Compute total_engagement
-if set(["likes", "shares", "saves", "comments"]).issubset(df.columns):
-    df["total_engagement"] = df[["likes","shares","saves","comments"]].sum(axis=1)
+if df.empty:
+    st.info("No data file found. Place a CSV at one of the expected paths to populate the dashboard.")
 
 # Adding tab for better orgnasation
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Trends", "WordCloud", "AI Model Predictions", "Classification Model", "Spam Detection"])
@@ -51,43 +204,25 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Tr
 with tab1:
     st.subheader("Key Metrics")
 
-    if set(["likes", "shares", "saves", "comments"]).issubset(df.columns):
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric("👍 Total Likes", int(df["likes"].sum()))
-        col2.metric("🔁 Total Shares", int(df["shares"].sum()))
-        col3.metric("💾 Total Saves", int(df["saves"].sum()))
-        col4.metric("💬 Total Comments", int(df["comments"].sum()))
-
-        # Engagement Breakdown
-        engagement_cols = ["likes", "shares", "saves", "comments"]
-        engagement_sum = df[engagement_cols].sum().reset_index()
-        engagement_sum.columns = ["metric", "count"]
-        fig1 = px.bar(engagement_sum, x="metric", y="count", title="Engagement Breakdown", text="count")
-        st.plotly_chart(fig1, use_container_width=True)
-    else:
-        st.info("Engagement metrics require likes/shares/saves/comments columns.")
-
 # tab 3: Trends
 with tab3:
     st.subheader("Trends & Distributions")
 
-    # Ensure total_engagement exists where possible
-    if "total_engagement" not in df.columns and set(["likes","shares","saves","comments"]).issubset(df.columns):
-        df["total_engagement"] = df[["likes","shares","saves","comments"]].sum(axis=1)
-
-    # 1. Engagement distribution
-    if "total_engagement" in df.columns:
-        st.subheader("Engagement Distribution")
-        fig4 = px.histogram(df, x="total_engagement", nbins=50,
-                            title="Distribution of Total Engagement per Comment")
-        st.plotly_chart(fig4, use_container_width=True)
-
     # 2. Quality distribution if present
     if "quality_score" in df.columns:
         st.subheader("Quality Score Distribution")
-        fig5 = px.histogram(df, x="quality_score", nbins=50,
-                            title="Distribution of Quality Scores")
-        st.plotly_chart(fig5, use_container_width=True)
+        # Server-side aggregation using numpy histogram
+        try:
+            counts, bin_edges = np.histogram(df["quality_score"].dropna().astype(float), bins=50)
+            bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+            agg_df = pd.DataFrame({"bin": bin_centers, "count": counts})
+            fig5 = px.bar(agg_df, x="bin", y="count", title="Distribution of Quality Scores")
+            fig5.update_xaxes(title_text="quality_score")
+            fig5.update_yaxes(title_text="count")
+            apply_brand_style(fig5)
+            st.plotly_chart(fig5, use_container_width=True, key="chart-quality-dist")
+        except Exception:
+            pass
 
     # 3. Sentiment distribution (already in tab2, but show again in trends)
     if "sentiment" in df.columns:
@@ -96,7 +231,8 @@ with tab3:
         sent_series.columns = ["sentiment", "count"]
         fig6 = px.bar(sent_series, x="sentiment", y="count",
                       title="Sentiment Counts")
-        st.plotly_chart(fig6, use_container_width=True)
+        apply_brand_style(fig6)
+        st.plotly_chart(fig6, use_container_width=True, key="chart-sentiment-counts")
         
         # Sentiment table with textOriginal
         if "textOriginal" in df.columns:
@@ -150,11 +286,13 @@ with tab3:
     for col in ["new_cluster", "cluster", "predicted_category"]:
         if col in df.columns:
             st.subheader(f"Category Distribution — {col}")
+            # Server-side aggregated counts
             cat_series = df[col].value_counts().reset_index()
             cat_series.columns = [col, "count"]
             fig7 = px.bar(cat_series.head(10), x=col, y="count",
                           title=f"Top 10 {col} categories")
-            st.plotly_chart(fig7, use_container_width=True)
+            apply_brand_style(fig7)
+            st.plotly_chart(fig7, use_container_width=True, key=f"chart-cat-{col}")
 
 # tab 4: WordCloud
 with tab4:
@@ -176,8 +314,6 @@ with tab4:
         with c3:
             min_freq = st.slider("Min frequency", min_value=1, max_value=20, value=2, step=1)
 
-        extra_sw = st.text_input("Additional stopwords (comma-separated)", value="", help="Add words to exclude, e.g., brand names or common fillers")
-
         # Build stopwords set using stopwordsiso
         try:
             # Get English stopwords from stopwordsiso
@@ -187,8 +323,7 @@ with tab4:
             base_sw = set(WordCloud().stopwords)
         
         common_social = {"https", "http", "www", "com", "amp", "rt", "u", "ur", "im", "ya", "lol"}
-        extras = {w.strip().lower() for w in extra_sw.split(",") if w.strip()}
-        stopwords = base_sw.union(common_social).union(extras)
+        stopwords = base_sw.union(common_social)
 
         # Extract and clean text
         series = df[text_col].dropna().astype(str)
@@ -459,7 +594,8 @@ with tab6:
         st.dataframe(df_show, use_container_width=True, height=320)
         try:
             fig_f1 = px.bar(df_show, x="label", y="f1-score", title="Top-10 Categories by Support — F1 Scores")
-            st.plotly_chart(fig_f1, use_container_width=True)
+            apply_brand_style(fig_f1)
+            st.plotly_chart(fig_f1, use_container_width=True, key="chart-cls-f1-top10")
         except Exception:
             pass
     elif os.path.exists(per_label_f1_path):
@@ -467,7 +603,8 @@ with tab6:
         st.dataframe(per_label_df, use_container_width=True, height=320)
         try:
             fig_f1 = px.bar(per_label_df, x="label", y="f1", title="Per-Label F1 Scores")
-            st.plotly_chart(fig_f1, use_container_width=True)
+            apply_brand_style(fig_f1)
+            st.plotly_chart(fig_f1, use_container_width=True, key="chart-cls-f1-perlabel")
         except Exception:
             pass
     elif classes:
@@ -490,7 +627,8 @@ with tab6:
             st.dataframe(comp_sorted, use_container_width=True, height=340)
             # Chart: show improvement deltas (top 10)
             fig_delta = px.bar(comp_sorted.head(10), x="label", y="delta", title="Top-10 Improvements after Threshold Tuning")
-            st.plotly_chart(fig_delta, use_container_width=True)
+            apply_brand_style(fig_delta)
+            st.plotly_chart(fig_delta, use_container_width=True, key="chart-cls-delta-tuning")
         except Exception as e:
             st.info(f"Could not compute tuning comparison: {e}")
     else:
@@ -544,7 +682,8 @@ with tab6:
         if topk:
             top_df = pd.DataFrame(topk, columns=["label", "probability"])  # top-5 bar chart
             fig_top = px.bar(top_df, x="label", y="probability", range_y=[0,1], title="Top-5 Predicted Labels")
-            st.plotly_chart(fig_top, use_container_width=True)
+            apply_brand_style(fig_top)
+            st.plotly_chart(fig_top, use_container_width=True, key="chart-cls-topk")
 
             # Apply thresholds (if available) to show predicted categories
             if thresholds and isinstance(probs, np.ndarray):
@@ -576,8 +715,10 @@ with tab7:
     
     col1, col2 = st.columns([2, 1])
     with col1:
+        # Already server-side aggregated via value_counts
         fig_spam = px.bar(spam_series, x="is_spam", y="count", title="Spam vs Non-Spam Distribution")
-        st.plotly_chart(fig_spam, use_container_width=True)
+        apply_brand_style(fig_spam)
+        st.plotly_chart(fig_spam, use_container_width=True, key="chart-spam-overall")
     
     with col2:
         total_comments = len(df)
@@ -601,6 +742,7 @@ with tab7:
         
         if video_cat_col:
             # Create spam analysis by category
+            # Server-side groupby aggregation only
             spam_by_category = df.groupby([video_cat_col, "is_spam"]).size().unstack(fill_value=0)
             spam_by_category.columns = ["Non-Spam", "Spam"]
             spam_by_category["Total"] = spam_by_category["Non-Spam"] + spam_by_category["Spam"]
@@ -611,60 +753,86 @@ with tab7:
             st.dataframe(spam_by_category, use_container_width=True)
             
             # Visualization
+            agg_cat_df = spam_by_category.reset_index().copy()
             fig_category = px.bar(
-                spam_by_category.reset_index(), 
+                agg_cat_df, 
                 x=video_cat_col, 
                 y=["Non-Spam", "Spam"], 
                 title="Spam Distribution by Video Category",
                 barmode="stack"
             )
-            st.plotly_chart(fig_category, use_container_width=True)
+            apply_brand_style(fig_category)
+            st.plotly_chart(fig_category, use_container_width=True, key="chart-spam-bycat")
             
             # Spam rate by category
             fig_rate = px.bar(
-                spam_by_category.reset_index(), 
+                agg_cat_df, 
                 x=video_cat_col, 
                 y="Spam_Rate", 
                 title="Spam Rate by Video Category (%)"
             )
-            st.plotly_chart(fig_rate, use_container_width=True)
+            apply_brand_style(fig_rate)
+            st.plotly_chart(fig_rate, use_container_width=True, key="chart-spam-rate-bycat")
 
     # Comment relevancy analysis
     st.subheader("Comment Relevancy Analysis")
     
     if has_quality and has_relevance:
         # Quality vs Relevance scatter plot
-        fig_relevance = px.scatter(
-            df, 
-            x="quality_score", 
-            y="relevance_score", 
-            color="is_spam",
-            title="Comment Quality vs Relevancy (colored by spam status)",
-            hover_data=["textOriginal"] if has_text else None
-        )
-        st.plotly_chart(fig_relevance, use_container_width=True)
+        # Server-side 2D binning (hexbin-like via histogram2d)
+        try:
+            x = df["quality_score"].astype(float)
+            y = df["relevance_score"].astype(float)
+            H, xedges, yedges = np.histogram2d(x, y, bins=40)
+            xcenters = (xedges[:-1] + xedges[1:]) / 2
+            ycenters = (yedges[:-1] + yedges[1:]) / 2
+            heat_df = pd.DataFrame([(xc, yc, int(H[i, j])) for i, xc in enumerate(xcenters) for j, yc in enumerate(ycenters)], columns=["quality", "relevance", "count"])
+            heat_df = heat_df[heat_df["count"] > 0]
+            fig_relevance = px.density_heatmap(heat_df, x="quality", y="relevance", z="count", nbinsx=40, nbinsy=40, title="Quality vs Relevancy (binned)")
+            apply_brand_style(fig_relevance)
+            st.plotly_chart(fig_relevance, use_container_width=True, key="chart-quality-vs-relevance-heat")
+        except Exception:
+            pass
         
         # Relevancy distribution
-        fig_relevance_dist = px.histogram(
-            df, 
-            x="relevance_score", 
-            color="is_spam",
-            title="Relevancy Score Distribution",
-            nbins=20
-        )
-        st.plotly_chart(fig_relevance_dist, use_container_width=True)
+        # Server-side aggregated histogram for relevancy
+        try:
+            counts, bin_edges = np.histogram(df["relevance_score"].dropna().astype(float), bins=20)
+            bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+            agg_rel = pd.DataFrame({"bin": bin_centers, "count": counts})
+            fig_relevance_dist = px.bar(agg_rel, x="bin", y="count", title="Relevancy Score Distribution")
+            fig_relevance_dist.update_xaxes(title_text="relevance_score")
+            fig_relevance_dist.update_yaxes(title_text="count")
+            apply_brand_style(fig_relevance_dist)
+            st.plotly_chart(fig_relevance_dist, use_container_width=True, key="chart-relevance-dist")
+        except Exception:
+            pass
+        
         
     elif has_quality:
         st.info("Only quality scores available. Relevancy scores not found in dataset.")
         # Quality distribution by spam status
-        fig_quality = px.histogram(
-            df, 
-            x="quality_score", 
-            color="is_spam",
-            title="Quality Score Distribution by Spam Status",
-            nbins=20
-        )
-        st.plotly_chart(fig_quality, use_container_width=True)
+        # Server-side aggregated histogram for quality by spam status
+        try:
+            tmp = df[["quality_score", "is_spam"]].dropna()
+            tmp["quality_score"] = tmp["quality_score"].astype(float)
+            # Compute separate histograms
+            bins = np.linspace(tmp["quality_score"].min(), tmp["quality_score"].max(), 21)
+            rows = []
+            for label in sorted(tmp["is_spam"].astype(str).unique()):
+                arr = tmp[tmp["is_spam"].astype(str) == label]["quality_score"].to_numpy()
+                counts, edges = np.histogram(arr, bins=bins)
+                centers = (edges[:-1] + edges[1:]) / 2
+                for c, xval in zip(counts, centers):
+                    rows.append({"bin": xval, "count": int(c), "is_spam": label})
+            agg_quality = pd.DataFrame(rows)
+            fig_quality = px.bar(agg_quality, x="bin", y="count", color="is_spam", barmode="group", title="Quality Score Distribution by Spam Status")
+            fig_quality.update_xaxes(title_text="quality_score")
+            fig_quality.update_yaxes(title_text="count")
+            apply_brand_style(fig_quality)
+            st.plotly_chart(fig_quality, use_container_width=True, key="chart-quality-dist-byspam")
+        except Exception:
+            pass
     else:
         st.info("No quality or relevancy scores found in dataset.")
 
@@ -725,3 +893,4 @@ with tab7:
                 st.metric("Spam Count", spam_count_filtered)
     else:
         st.info("No text column found to display spam comments.")
+ 
