@@ -252,18 +252,6 @@ with tab1:
             fig_cat = px.bar(cat_counts, x=col, y="count", title=f"Top 10 {col} Categories")
             apply_brand_style(fig_cat)
             st.plotly_chart(fig_cat, width='stretch', key=f"overview-top10-{col}")
-    # Quality Score Histogram
-    if "quality_score" in filtered_df.columns:
-        st.subheader("Quality Score Distribution (Histogram)")
-        fig_quality = px.histogram(filtered_df, x="quality_score", nbins=30, title="Quality Score Distribution")
-        apply_brand_style(fig_quality)
-        st.plotly_chart(fig_quality, width='stretch')
-    # Relevance Score Histogram
-    if "relevance_score" in filtered_df.columns:
-        st.subheader("Relevance Score Distribution (Histogram)")
-        fig_relevance = px.histogram(filtered_df, x="relevance_score", nbins=30, title="Relevance Score Distribution")
-        apply_brand_style(fig_relevance)
-        st.plotly_chart(fig_relevance, width='stretch')
 
 with tab2:
     if "sentiment" in filtered_df.columns:
@@ -498,7 +486,13 @@ with tab5:
         if baseline_col:
             display_cols.append(baseline_col)
 
-        st.dataframe(df_view[display_cols].head(int(sample_size)), width='stretch', height=420)
+        # Check if there are any rows to display
+        if df_view[display_cols].dropna(how="all").shape[0] == 0:
+            st.info("No rows to display. The columns exist, but there are no non-empty rows for the selected filter.")
+        else:
+            st.dataframe(df_view[display_cols].head(int(sample_size)), width='stretch', height=420)
+    else:
+        st.info("Required columns 'textOriginal' and 'new_cluster' not found in the dataset.")
 
 # tab 6: Classification Model (BERT multi-label)
 with tab6:
