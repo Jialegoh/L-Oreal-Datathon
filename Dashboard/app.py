@@ -17,7 +17,6 @@ st.title("Dashboard")
 st.markdown("Analyse the quality and relevance of comments through Share of Engagement (SoE)")
 
 try:
-    # Plotly defaults for a clean white theme with L'Oréal accents
     px.defaults.template = "plotly_white"
     px.defaults.color_discrete_sequence = [
         "#111111",  # Brand Black
@@ -33,7 +32,6 @@ try:
 except Exception:
     pass
 
-# Inject CSS to enhance visuals (white background, cards, spacing, typography)
 st.markdown(
     """
     <style>
@@ -211,24 +209,40 @@ with tab1:
     if "relevance_score" in filtered_df.columns:
         col3.metric("Avg Relevance Score", f"{filtered_df['relevance_score'].mean():.2f}")
     st.divider()
-    st.download_button("Download filtered data as CSV", filtered_df.to_csv(index=False), "filtered_comments.csv")
+    # Sentiment and Spam Pie Charts in the same row
+    pie_col1, pie_col2 = st.columns(2)
+    with pie_col1:
+        if "sentiment" in filtered_df.columns:
+            st.subheader("Sentiment Distribution (Pie Chart)")
+            sent_counts = filtered_df["sentiment"].value_counts().reset_index()
+            sent_counts.columns = ["sentiment", "count"]
+            fig_sent = px.pie(sent_counts, names="sentiment", values="count", title="Sentiment Distribution")
+            apply_brand_style(fig_sent)
+            st.plotly_chart(fig_sent, use_container_width=True)
+    with pie_col2:
+        if "is_spam" in filtered_df.columns:
+            st.subheader("Spam vs Non-Spam (Pie Chart)")
+            spam_counts = filtered_df["is_spam"].astype(str).str.lower().replace({"yes": "Spam", "no": "Non-Spam"}).value_counts().reset_index()
+            spam_counts.columns = ["is_spam", "count"]
+            fig_spam = px.pie(spam_counts, names="is_spam", values="count", title="Spam vs Non-Spam")
+            apply_brand_style(fig_spam)
+            st.plotly_chart(fig_spam, use_container_width=True)
     st.divider()
-    # Sentiment Pie Chart
-    if "sentiment" in filtered_df.columns:
-        st.subheader("Sentiment Distribution (Pie Chart)")
-        sent_counts = filtered_df["sentiment"].value_counts().reset_index()
-        sent_counts.columns = ["sentiment", "count"]
-        fig_sent = px.pie(sent_counts, names="sentiment", values="count", title="Sentiment Distribution")
-        apply_brand_style(fig_sent)
-        st.plotly_chart(fig_sent, width='stretch')
-    # Spam Pie Chart
-    if "is_spam" in filtered_df.columns:
-        st.subheader("Spam vs Non-Spam (Pie Chart)")
-        spam_counts = filtered_df["is_spam"].astype(str).str.lower().value_counts().reset_index()
-        spam_counts.columns = ["is_spam", "count"]
-        fig_spam = px.pie(spam_counts, names="is_spam", values="count", title="Spam vs Non-Spam")
-        apply_brand_style(fig_spam)
-        st.plotly_chart(fig_spam, width='stretch')
+    # Quality Score and Relevance Score Histograms in the same row
+    hist_col1, hist_col2 = st.columns(2)
+    with hist_col1:
+        if "quality_score" in filtered_df.columns:
+            st.subheader("Quality Score Distribution (Histogram)")
+            fig_quality = px.histogram(filtered_df, x="quality_score", nbins=30, title="Quality Score Distribution")
+            apply_brand_style(fig_quality)
+            st.plotly_chart(fig_quality, use_container_width=True)
+    with hist_col2:
+        if "relevance_score" in filtered_df.columns:
+            st.subheader("Relevance Score Distribution (Histogram)")
+            fig_relevance = px.histogram(filtered_df, x="relevance_score", nbins=30, title="Relevance Score Distribution")
+            apply_brand_style(fig_relevance)
+            st.plotly_chart(fig_relevance, use_container_width=True)
+    st.divider()
     # Top 10 Clusters/Categories Bar Chart
     for col in ["new_cluster", "cluster", "predicted_category"]:
         if col in filtered_df.columns:
@@ -748,9 +762,8 @@ with tab7:
     
     with col2:
         total_comments = len(df)
-        spam_count = len(df[df["is_spam"].astype(str).str.lower() == "true"])
+        spam_count = len(df[df["is_spam"].astype(str).str.lower() == "yes"])
         spam_rate = (spam_count / total_comments) * 100 if total_comments > 0 else 0
-        
         st.metric("Total Comments", total_comments)
         st.metric("Spam Comments", spam_count)
         st.metric("Spam Rate", f"{spam_rate:.1f}%")
@@ -769,8 +782,9 @@ with tab7:
         if video_cat_col:
             # Create spam analysis by category
             # Server-side groupby aggregation only
-            spam_by_category = df.groupby([video_cat_col, "is_spam"]).size().unstack(fill_value=0)
-            spam_by_category.columns = ["Non-Spam", "Spam"]
+            spam_by_category = df.copy()
+            spam_by_category["is_spam"] = spam_by_category["is_spam"].astype(str).str.lower().replace({"yes": "Spam", "no": "Non-Spam"})
+            spam_by_category = spam_by_category.groupby([video_cat_col, "is_spam"]).size().unstack(fill_value=0)
             spam_by_category["Total"] = spam_by_category["Non-Spam"] + spam_by_category["Spam"]
             spam_by_category["Spam_Rate"] = (spam_by_category["Spam"] / spam_by_category["Total"] * 100).round(1)
             spam_by_category = spam_by_category.sort_values("Spam_Rate", ascending=False)
@@ -879,7 +893,7 @@ with tab7:
         # Apply filters
         df_filtered = df.copy()
         if show_spam_only:
-            df_filtered = df_filtered[df_filtered["is_spam"].astype(str).str.lower() == "true"]
+            df_filtered = df_filtered[df_filtered["is_spam"].astype(str).str.lower() == "yes"]
         if has_video_category and video_cat_col and category_filter != "All":
             df_filtered = df_filtered[df_filtered[video_cat_col] == category_filter]
         
@@ -915,7 +929,7 @@ with tab7:
                     avg_relevance = df_filtered["relevance_score"].mean()
                     st.metric("Avg Relevancy Score", f"{avg_relevance:.3f}")
             with col4:
-                spam_count_filtered = len(df_filtered[df_filtered["is_spam"].astype(str).str.lower() == "true"])
+                spam_count_filtered = len(df_filtered[df_filtered["is_spam"].astype(str).str.lower() == "yes"])
                 st.metric("Spam Count", spam_count_filtered)
     else:
         st.info("No text column found to display spam comments.")
