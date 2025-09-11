@@ -218,7 +218,7 @@ with tab1:
             sent_counts.columns = ["sentiment", "count"]
             fig_sent = px.pie(sent_counts, names="sentiment", values="count", title="Sentiment Distribution")
             apply_brand_style(fig_sent)
-            st.plotly_chart(fig_sent, use_container_width=True)
+            st.plotly_chart(fig_sent, use_container_width=True, key="overview-sentiment-pie")
     with pie_col2:
         if "is_spam" in filtered_df.columns:
             st.subheader("Spam vs Non-Spam (Pie Chart)")
@@ -226,7 +226,7 @@ with tab1:
             spam_counts.columns = ["is_spam", "count"]
             fig_spam = px.pie(spam_counts, names="is_spam", values="count", title="Spam vs Non-Spam")
             apply_brand_style(fig_spam)
-            st.plotly_chart(fig_spam, use_container_width=True)
+            st.plotly_chart(fig_spam, use_container_width=True, key="overview-spam-pie")
     st.divider()
     # Quality Score and Relevance Score Histograms in the same row
     hist_col1, hist_col2 = st.columns(2)
@@ -235,13 +235,13 @@ with tab1:
             st.subheader("Quality Score Distribution (Histogram)")
             fig_quality = px.histogram(filtered_df, x="quality_score", nbins=30, title="Quality Score Distribution")
             apply_brand_style(fig_quality)
-            st.plotly_chart(fig_quality, use_container_width=True)
+            st.plotly_chart(fig_quality, use_container_width=True, key="overview-quality-hist")
     with hist_col2:
         if "relevance_score" in filtered_df.columns:
             st.subheader("Relevance Score Distribution (Histogram)")
             fig_relevance = px.histogram(filtered_df, x="relevance_score", nbins=30, title="Relevance Score Distribution")
             apply_brand_style(fig_relevance)
-            st.plotly_chart(fig_relevance, use_container_width=True)
+            st.plotly_chart(fig_relevance, use_container_width=True, key="overview-relevance-hist")
     st.divider()
     # Top 10 Clusters/Categories Bar Chart
     for col in ["new_cluster", "cluster", "predicted_category"]:
@@ -251,7 +251,7 @@ with tab1:
             cat_counts.columns = [col, "count"]
             fig_cat = px.bar(cat_counts, x=col, y="count", title=f"Top 10 {col} Categories")
             apply_brand_style(fig_cat)
-            st.plotly_chart(fig_cat, width='stretch')
+            st.plotly_chart(fig_cat, width='stretch', key=f"overview-top10-{col}")
     # Quality Score Histogram
     if "quality_score" in filtered_df.columns:
         st.subheader("Quality Score Distribution (Histogram)")
