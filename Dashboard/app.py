@@ -9,7 +9,6 @@ import json
 import numpy as np
 import re
 import stopwordsiso as stopwords_iso
-from dotenv import load_dotenv
 
 # Page configuration
 st.set_page_config(page_title="AI Glow-rithms", layout="wide")
