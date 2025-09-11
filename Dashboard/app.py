@@ -203,6 +203,13 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Tr
 # tab 1: Overview
 with tab1:
     st.subheader("Key Metrics")
+    st.subheader("Key Metrics")
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Total Comments", len(df))
+    if "quality_score" in df.columns:
+        col2.metric("Avg Quality Score", f"{df['quality_score'].mean():.2f}")
+    if "relevance_score" in df.columns:
+        col3.metric("Avg Relevance Score", f"{df['relevance_score'].mean():.2f}")
 
 # tab 3: Trends
 with tab3:
