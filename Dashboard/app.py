@@ -263,37 +263,35 @@ with tab2:
         st.plotly_chart(fig6, width='stretch', key="chart-sentiment-counts")
         if "textOriginal" in filtered_df.columns:
             st.subheader("Comments by Sentiment")
-            with st.expander("Show Comments Table", expanded=False):
-                col1, col2 = st.columns([2, 1])
-                with col1:
-                    sentiment_filter_table = st.multiselect(
-                        "Filter by sentiment:",
-                        options=filtered_df["sentiment"].unique(),
-                        default=filtered_df["sentiment"].unique(),
-                        key="sentiment_table_filter"
-                    )
-                with col2:
-                    sample_size_sentiment = st.number_input(
-                        "Rows to show:", 
-                        min_value=11, 
-                        max_value=1000, 
-                        value=11, 
-                        step=5,
-                        key="sentiment_sample_size"
-                    )
-                df_sentiment = filtered_df[filtered_df["sentiment"].isin(sentiment_filter_table)]
-                display_cols = ["textOriginal", "sentiment"]
-                if "post_id" in filtered_df.columns:
-                    display_cols.insert(0, "post_id")
-                if "comment_id" in filtered_df.columns:
-                    display_cols.insert(1, "comment_id")
-                st.dataframe(df_sentiment[display_cols].head(int(sample_size_sentiment)), width='stretch', height=400)
-                st.download_button("Download table as CSV", df_sentiment[display_cols].to_csv(index=False), "sentiment_comments.csv")
-                if len(sentiment_filter_table) > 0:
-                    filtered_counts = df_sentiment["sentiment"].value_counts()
-                    st.write("**Sentiment counts in filtered data:**")
-                    for sentiment, count in filtered_counts.items():
-                        st.write(f"- {sentiment}: {count}")
+            col1, col2 = st.columns([2, 1])
+            with col1:
+                sentiment_filter_table = st.multiselect(
+                    "Filter by sentiment:",
+                    options=filtered_df["sentiment"].unique(),
+                    default=filtered_df["sentiment"].unique(),
+                    key="sentiment_table_filter"
+                )
+            with col2:
+                sample_size_sentiment = st.number_input(
+                    "Rows to show:", 
+                    min_value=11, 
+                    max_value=1000, 
+                    value=11, 
+                    step=5,
+                    key="sentiment_sample_size"
+                )
+            df_sentiment = filtered_df[filtered_df["sentiment"].isin(sentiment_filter_table)]
+            display_cols = ["textOriginal", "sentiment"]
+            if "post_id" in filtered_df.columns:
+                display_cols.insert(0, "post_id")
+            if "comment_id" in filtered_df.columns:
+                display_cols.insert(1, "comment_id")
+            st.dataframe(df_sentiment[display_cols].head(int(sample_size_sentiment)), width='stretch', height=400)
+            if len(sentiment_filter_table) > 0:
+                filtered_counts = df_sentiment["sentiment"].value_counts()
+                st.write("**Sentiment counts in filtered data:**")
+                for sentiment, count in filtered_counts.items():
+                    st.write(f"- {sentiment}: {count}")
         else:
             st.info("No 'textOriginal' column found to display comments with sentiment.")
 
