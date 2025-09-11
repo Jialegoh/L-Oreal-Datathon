@@ -1,1 +1,0 @@
-attach the comments_with_sentiment.csv file to the Dashboard folder to display the data
