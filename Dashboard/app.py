@@ -259,7 +259,7 @@ with tab3:
                     "Rows to show:", 
                     min_value=10, 
                     max_value=1000, 
-                    value=100, 
+                    value=5, 
                     step=10,
                     key="sentiment_sample_size"
                 )
@@ -455,7 +455,7 @@ with tab5:
                 index=0,
             )
         with right:
-            sample_size = st.number_input("Rows to show", min_value=10, max_value=1000, value=100, step=10)
+            sample_size = st.number_input("Rows to show", min_value=10, max_value=1000, value=5, step=5)
 
         df_view = df.copy()
         if selected_cluster != "(All)":
@@ -852,7 +852,7 @@ with tab7:
         with col1:
             show_spam_only = st.checkbox("Show only spam comments", value=True)
         with col2:
-            sample_size_spam = st.number_input("Rows to show", min_value=10, max_value=500, value=50, step=10)
+            sample_size_spam = st.number_input("Rows to show", min_value=10, max_value=500, value=5, step=5)
         with col3:
             if has_video_category and video_cat_col:
                 category_filter = st.selectbox("Filter by category", ["All"] + list(df[video_cat_col].unique()))
