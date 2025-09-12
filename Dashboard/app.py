@@ -692,23 +692,28 @@ with tab7:
 
     # Overall spam distribution
     st.subheader("Overall Spam Distribution")
-    spam_series = df["is_spam"].astype(str).str.lower().value_counts().reset_index()
-    spam_series.columns = ["is_spam", "count"]
-    
+
     col1, col2 = st.columns([2, 1])
     with col1:
-        # Already server-side aggregated via value_counts
-        fig_spam = px.bar(spam_series, x="is_spam", y="count", title="Spam vs Non-Spam Distribution")
+        spam_counts = df["is_spam"].astype(str).str.lower().replace({"yes": "Spam", "no": "Non-Spam"}).value_counts().reset_index()
+        spam_counts.columns = ["is_spam", "count"]
+        spam_counts["label_with_count"] = spam_counts.apply(lambda row: f"{row['is_spam']} ({row['count']})", axis=1)
+        fig_spam = px.pie(
+            spam_counts,
+            names="label_with_count",
+            values="count",
+            title="Spam vs Non-Spam"
+        )
         apply_brand_style(fig_spam)
-        st.plotly_chart(fig_spam, width='stretch', key="chart-spam-overall")
-    
+        st.plotly_chart(fig_spam, use_container_width=True, key="overview-tab7-pie")
+            
     with col2:
         total_comments = len(df)
         spam_count = len(df[df["is_spam"].astype(str).str.lower() == "yes"])
         spam_rate = (spam_count / total_comments) * 100 if total_comments > 0 else 0
         st.metric("Total Comments", total_comments)
         st.metric("Spam Comments", spam_count)
-        st.metric("Spam Rate", f"{spam_rate:.1f}%")
+        st.metric("Spam Rate", f"{spam_rate:.2f}%")
 
     # Spam analysis per video category
     if has_video_category:
