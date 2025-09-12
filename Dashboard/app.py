@@ -249,6 +249,22 @@ with tab3:
             st.plotly_chart(fig5, width='stretch', key="chart-quality-dist")
         except Exception:
             pass
+    
+    # Quality Score by Cluster Category 
+    for col in ["new_cluster", "cluster", "predicted_category"]:
+        if col in filtered_df.columns:
+            st.subheader(f"Average Quality Score by {col}")
+            avg_quality = filtered_df.groupby(col)["quality_score"].mean().reset_index()
+            avg_quality = avg_quality.sort_values("quality_score", ascending=False).head(10)
+            fig_quality_cat = px.bar(
+                avg_quality,
+                x=col,
+                y="quality_score",
+                title=f"Top 10 {col} Categories by Avg Quality Score"
+            )
+            apply_brand_style(fig_quality_cat)
+            st.plotly_chart(fig_quality_cat, width='stretch', key=f"chart-quality-by-{col}")
+
     for col in ["new_cluster", "cluster", "predicted_category"]:
         if col in filtered_df.columns:
             st.subheader(f"Category Distribution — {col}")
