@@ -745,7 +745,32 @@ with tab7:
             )
             apply_brand_style(fig_category)
             st.plotly_chart(fig_category, width='stretch', key="chart-spam-bycat")
-            
+    
+    # Spam analysis by topic category
+    if "topicCategories_clean" in df.columns:
+        st.subheader("Spam Rate Treemap by Topic Category")
+        spam_topic_df = df.copy()
+        spam_topic_df["is_spam"] = spam_topic_df["is_spam"].astype(str).str.lower().replace({"yes": "Spam", "no": "Non-Spam"})
+        spam_topic_df["topicCategories_clean"] = spam_topic_df["topicCategories_clean"].apply(
+            lambda x: re.findall(r"'([^']+)'", x) if isinstance(x, str) else []
+        )
+        spam_topic_exploded = spam_topic_df.explode("topicCategories_clean")
+        agg = spam_topic_exploded.groupby("topicCategories_clean").agg(
+            total_comments=("is_spam", "count"),
+            spam_comments=("is_spam", lambda x: (x == "Spam").sum())
+        )
+        agg["Spam Rate (%)"] = (agg["spam_comments"] / agg["total_comments"] * 100).round(1)
+        fig_treemap = px.treemap(
+            agg.reset_index(),
+            path=["topicCategories_clean"],
+            values="total_comments",
+            color="Spam Rate (%)",
+            color_continuous_scale="Reds",
+            title="Treemap: Spam Rate & Volume by Topic Category"
+        )
+        apply_brand_style(fig_treemap)
+        st.plotly_chart(fig_treemap, use_container_width=True, key="chart-treemap-topiccat")
+
     # Spam comments table with context
     if has_text:
         st.subheader("Spam Comments Analysis")
