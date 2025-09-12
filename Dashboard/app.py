@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+# Use default matplotlib styling
 from collections import Counter
 import os
 import json
@@ -16,154 +17,13 @@ st.set_page_config(page_title="AI Glow-rithms", layout="wide")
 st.title("Dashboard")
 st.markdown("Analyse the quality and relevance of comments through Share of Engagement (SoE)")
 
-try:
-    px.defaults.template = "plotly_white"
-    px.defaults.color_discrete_sequence = [
-        "#111111",  # Brand Black
-        "#C8A97E",  # Brand Gold
-        "#4B5563",  # Charcoal gray
-        "#8B5E3C",  # Deep bronze
-        "#9CA3AF",  # Neutral gray
-        "#B08968"   # Soft bronze
-    ]
-    px.defaults.color_continuous_scale = [
-        "#111111", "#3A2F20", "#6D5639", "#9B7B55", "#C8A97E"
-    ]
-except Exception:
-    pass
+# Use default Plotly settings
 
-st.markdown(
-    """
-    <style>
-      :root{
-        --brand-black:#111111;
-        --brand-gold:#C8A97E;
-        --brand-charcoal:#4B5563;
-        --border:#e5e7eb;
-      }
-      /* Base */
-      .stApp { background-color: #ffffff; }
-      .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 2rem;
-        max-width: 1400px;
-      }
-      /* Typography */
-      h1, h2, h3 { color: var(--brand-black); }
-      h1 { font-weight: 700; letter-spacing: -0.01em; }
-      h2 { font-weight: 600; }
-      p, label, span, div { color: var(--brand-black); }
-      /* Heading accent */
-      h1:after{
-        content: "";
-        display: block;
-        width: 64px; height: 3px;
-        background: var(--brand-gold);
-        margin-top: 8px;
-        border-radius: 3px;
-      }
-      /* Tabs */
-      div[role="tablist"] > div {
-        background: #ffffff !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 10px !important;
-        box-shadow: 0 2px 10px rgba(17, 24, 39, 0.04);
-      }
-      button[role="tab"] { color: var(--brand-charcoal) !important; }
-      button[role="tab"][data-baseweb="tab-highlighted"] {
-        color: var(--brand-black) !important;
-        box-shadow: inset 0 -3px 0 0 var(--brand-gold);
-      }
-      /* Metric cards */
-      div[data-testid="stMetric"] {
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 14px 16px;
-        box-shadow: 0 2px 12px rgba(17, 24, 39, 0.06);
-        position: relative;
-      }
-      div[data-testid="stMetric"]:before{
-        content: "";
-        position: absolute; left: 0; top: 0; height: 4px; width: 100%;
-        background: linear-gradient(90deg, var(--brand-gold), rgba(200,169,126,0.2));
-        border-top-left-radius: 12px; border-top-right-radius: 12px;
-      }
-      /* Plotly charts */
-      div[data-testid="stPlotlyChart"] {
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 8px;
-        box-shadow: 0 2px 12px rgba(17, 24, 39, 0.06);
-      }
-      /* Dataframes */
-      div[data-testid="stDataFrame"] {
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        box-shadow: 0 2px 12px rgba(17, 24, 39, 0.06);
-      }
-      /* Inputs & selects */
-      .stTextInput, .stSelectbox, .stNumberInput, .stSlider { background: #ffffff; }
-      /* Primary buttons */
-      button[kind="primary"], .stButton>button {
-        background: var(--brand-black) !important;
-        color: #ffffff !important;
-        border-radius: 10px !important;
-        border: 1px solid var(--brand-black) !important;
-      }
-      .stButton>button:hover {
-        background: #000000 !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        border-color: var(--brand-gold) !important;
-      }
-      /* Subtle card utility for grouping */
-      .card {
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 16px;
-        box-shadow: 0 2px 12px rgba(17, 24, 39, 0.06);
-        margin-bottom: 1rem;
-        position: relative;
-      }
-      .card:before{
-        content: "";
-        position: absolute; left: 0; top: 0; height: 4px; width: 100%;
-        background: var(--brand-gold);
-        border-top-left-radius: 12px; border-top-right-radius: 12px;
-      }
-      /* Links */
-      a { color: var(--brand-black); }
-      a:hover { color: var(--brand-gold); }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
 
-# Plotly brand styling helper
-BRAND_BLACK = "#111111"
-BRAND_GOLD = "#C8A97E"
-BRAND_COLORWAY = ["#111111", "#C8A97E", "#4B5563", "#8B5E3C", "#9CA3AF", "#B08968"]
-
+# Use default Plotly styling
 def apply_brand_style(fig):
-    try:
-        # Global layout
-        fig.update_layout(
-            colorway=BRAND_COLORWAY,
-            title_font_color=BRAND_BLACK,
-            font_color=BRAND_BLACK,
-            legend_title_font_color=BRAND_BLACK,
-            legend_font_color=BRAND_BLACK,
-        )
-        # If single trace, emphasize with brand gold
-        if hasattr(fig, "data") and len(fig.data) <= 1:
-            fig.update_traces(marker_color=BRAND_GOLD)
-            fig.update_traces(marker_line_color=BRAND_BLACK, marker_line_width=0.5)
-            fig.update_traces(line=dict(color=BRAND_BLACK, width=2.2))
-    except Exception:
-        pass
+    # No custom styling - use Streamlit/Plotly defaults
+    pass
 
 # Load data from selectable sources (auto-priority)
 base_dir = os.path.dirname(__file__)
@@ -197,7 +57,7 @@ if df.empty:
 filtered_df = df.copy()
 
 # Adding tab for better orgnasation
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Trends", "WordCloud", "AI Model Predictions", "Classification Model", "Spam Detection"])
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Trends", "WordCloud", "Cluster Analysis (Keywords)", "Classification Model", "Spam Detection"])
 
 # tab 1: Overview
 with tab1:
@@ -286,7 +146,7 @@ with tab2:
                 display_cols.insert(0, "post_id")
             if "comment_id" in filtered_df.columns:
                 display_cols.insert(1, "comment_id")
-            st.dataframe(df_sentiment[display_cols].head(int(sample_size_sentiment)), width='stretch', height=400)
+            st.dataframe(df_sentiment[display_cols].head(int(float(sample_size_sentiment))), height=400)
             if len(sentiment_filter_table) > 0:
                 filtered_counts = df_sentiment["sentiment"].value_counts()
                 st.write("**Sentiment counts in filtered data:**")
@@ -419,7 +279,7 @@ with tab4:
                         
                         # Calculate redundant keywords (words with same meaning/concept)
                         st.write(f"**{category} Keywords ({len(keywords)} unique words)**")
-                        st.dataframe(cat_df, width='stretch', height=200)
+                        st.dataframe(cat_df, height=200)
                         
                         # Show total count for this category
                         total_count = sum(keywords.values())
@@ -452,62 +312,135 @@ with tab4:
                         other_df = pd.DataFrame(uncategorized, columns=["keyword", "count"])
                         other_df = other_df.sort_values("count", ascending=False)
                         st.write(f"**Other Keywords ({len(uncategorized)} words)**")
-                        st.dataframe(other_df, width='stretch', height=200)
+                        st.dataframe(other_df, height=200)
                     else:
                         st.write("No uncategorized keywords found.")
 
             # Show top keywords (original view)
             st.subheader("All Keywords (Top 50)")
             top_df = pd.DataFrame(freq.most_common(50), columns=["keyword", "count"])
-            st.dataframe(top_df, width='stretch', height=240)
+            st.dataframe(top_df, height=240)
 
             # Generate word cloud from frequencies
             wc = WordCloud(width=1000, height=360, background_color="white")
             wc = wc.generate_from_frequencies(dict(freq.most_common(max_words)))
             plt.figure(figsize=(16, 6))
             plt.imshow(wc, interpolation="bilinear")
-    plt.axis("off")
+            plt.axis("off")
     st.pyplot(plt)
 
-# tab 5: AI Model Predictions (Clusters table + accuracy)
+# tab 5: Cluster Analysis (Keywords)
 with tab5:
-    st.subheader("AI Model Predictions — Clusters Table")
+    st.subheader("Cluster Analysis — Keywords")
+    st.markdown("Analysis of keywords extracted from comments and their assigned categories.")
     
-    required_cols = {"textOriginal", "new_cluster"}
-    if required_cols.issubset(df.columns):
-        # Optional baseline for accuracy
-        baseline_col = None
-        if "cluster" in df.columns:
-            baseline_col = "cluster"
-        elif "original_cluster" in df.columns:
-            baseline_col = "original_cluster"
-
-        # Filters and display controls
-        left, right = st.columns([2, 1])
-        with left:
-            selected_cluster = st.selectbox(
-                "Filter by new_cluster (optional):",
-                options=["(All)"] + sorted(df["new_cluster"].astype(str).unique().tolist()),
-                index=0,
-            )
-        with right:
-            sample_size = st.number_input("Rows to show", min_value=11, max_value=1000, value=11, step=5)
-
-        df_view = df.copy()
-        if selected_cluster != "(All)":
-            df_view = df_view[df_view["new_cluster"].astype(str) == selected_cluster]
-
-        display_cols = ["textOriginal", "new_cluster"]
-        if baseline_col:
-            display_cols.append(baseline_col)
-
-        # Check if there are any rows to display
-        if df_view[display_cols].dropna(how="all").shape[0] == 0:
-            st.info("No rows to display. The columns exist, but there are no non-empty rows for the selected filter.")
-        else:
-            st.dataframe(df_view[display_cols].head(int(sample_size)), width='stretch', height=420)
+    # Load cluster.txt file
+    cluster_file_path = os.path.join(os.path.dirname(__file__), "cluster.txt")
+    
+    if os.path.exists(cluster_file_path):
+        try:
+            # Read the cluster.txt file
+            with open(cluster_file_path, 'r', encoding='utf-8') as file:
+                content = file.read()
+            
+            # Parse the content to extract categories and keywords
+            categories_data = []
+            lines = content.strip().split('\n')
+            
+            for line in lines:
+                if line.strip():
+                    # Split by colon to separate category name from keywords
+                    if ':' in line:
+                        category_part, keywords_part = line.split(':', 1)
+                        category_name = category_part.strip().strip("'\"")
+                        
+                        # Extract keywords from the list format
+                        keywords_text = keywords_part.strip()
+                        if keywords_text.startswith('[') and keywords_text.endswith(']'):
+                            keywords_text = keywords_text[1:-1]  # Remove brackets
+                        
+                        # Split by comma and clean up keywords
+                        keywords = [kw.strip().strip("'\"") for kw in keywords_text.split(',')]
+                        
+                        # Add each keyword with its category
+                        for keyword in keywords:
+                            if keyword:  # Skip empty keywords
+                                categories_data.append({
+                                    'Keyword': keyword,
+                                    'Category': category_name
+                                })
+            
+            if categories_data:
+                # Create DataFrame
+                keywords_df = pd.DataFrame(categories_data)
+                
+                # Count keyword frequencies
+                keyword_counts = keywords_df['Keyword'].value_counts().reset_index()
+                keyword_counts.columns = ['Keyword', 'Count']
+                
+                # Merge with categories
+                result_df = keyword_counts.merge(
+                    keywords_df[['Keyword', 'Category']].drop_duplicates(), 
+                    on='Keyword', 
+                    how='left'
+                )
+                
+                # Sort by count (descending)
+                result_df = result_df.sort_values('Count', ascending=False)
+                
+                # Display controls
+                col1, col2 = st.columns([2, 1])
+                with col1:
+                    selected_category = st.selectbox(
+                        "Filter by category:",
+                        options=["(All)"] + sorted(result_df['Category'].unique().tolist()),
+                        index=0,
+                    )
+                with col2:
+                    max_keywords = st.number_input("Max keywords to show", min_value=10, max_value=500, value=100, step=10)
+                
+                # Filter by category if selected
+                if selected_category != "(All)":
+                    filtered_df = result_df[result_df['Category'] == selected_category]
+                else:
+                    filtered_df = result_df
+                
+                # Limit results
+                display_df = filtered_df.head(max_keywords)
+                
+                # Display the table
+                st.dataframe(
+                    display_df,
+                    height=400,
+                    use_container_width=True
+                )
+                
+                # Display summary statistics
+                st.subheader("Summary Statistics")
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Total Keywords", len(result_df))
+                with col2:
+                    st.metric("Total Categories", result_df['Category'].nunique())
+                with col3:
+                    st.metric("Most Frequent Keyword", f"{result_df.iloc[0]['Keyword']} ({result_df.iloc[0]['Count']})")
+                
+                # Show top categories by keyword count
+                st.subheader("Top Categories by Keyword Count")
+                category_counts = result_df.groupby('Category')['Count'].sum().sort_values(ascending=False).head(10)
+                category_df = pd.DataFrame({
+                    'Category': category_counts.index,
+                    'Total Keywords': category_counts.values
+                })
+                st.dataframe(category_df, height=300, use_container_width=True)
+                
+            else:
+                st.warning("No keywords found in the cluster.txt file.")
+                
+        except Exception as e:
+            st.error(f"Error reading cluster.txt file: {str(e)}")
     else:
-        st.info("Required columns 'textOriginal' and 'new_cluster' not found in the dataset.")
+        st.error("cluster.txt file not found. Please ensure the file exists in the Dashboard directory.")
 
 # tab 6: Classification Model (BERT multi-label)
 with tab6:
@@ -640,7 +573,7 @@ with tab6:
         df_show = per_label_from_clsrep.copy()
         if "support" in df_show.columns:
             df_show = df_show.sort_values("support", ascending=False).head(10)
-        st.dataframe(df_show, width='stretch', height=320)
+        st.dataframe(df_show, height=320)
         try:
             fig_f1 = px.bar(df_show, x="label", y="f1-score", title="Top-10 Categories by Support — F1 Scores")
             apply_brand_style(fig_f1)
@@ -649,7 +582,7 @@ with tab6:
             pass
     elif os.path.exists(per_label_f1_path):
         per_label_df = pd.read_csv(per_label_f1_path)
-        st.dataframe(per_label_df, width='stretch', height=320)
+        st.dataframe(per_label_df, height=320)
         try:
             fig_f1 = px.bar(per_label_df, x="label", y="f1", title="Per-Label F1 Scores")
             apply_brand_style(fig_f1)
@@ -659,7 +592,7 @@ with tab6:
     elif classes:
         st.info("No saved per-label metrics found. Provide classification_report.csv or per_label_f1.csv to visualize actual scores.")
         placeholder_df = pd.DataFrame({"label": classes, "f1": [None] * len(classes)})
-        st.dataframe(placeholder_df, width='stretch', height=320)
+        st.dataframe(placeholder_df, height=320)
 
     st.divider()
 
@@ -673,7 +606,7 @@ with tab6:
             comp = df_default.merge(df_tuned, on="label", how="inner")
             comp["delta"] = comp["f1_tuned"] - comp["f1_default"]
             comp_sorted = comp.sort_values("delta", ascending=False)
-            st.dataframe(comp_sorted, width='stretch', height=340)
+            st.dataframe(comp_sorted, height=340)
             # Chart: show improvement deltas (top 10)
             fig_delta = px.bar(comp_sorted.head(10), x="label", y="delta", title="Top-10 Improvements after Threshold Tuning")
             apply_brand_style(fig_delta)
@@ -799,7 +732,7 @@ with tab7:
             spam_by_category = spam_by_category.sort_values("Spam_Rate", ascending=False)
             
             # Display table
-            st.dataframe(spam_by_category, width='stretch')
+            st.dataframe(spam_by_category)
             
             # Visualization
             agg_cat_df = spam_by_category.reset_index().copy()
@@ -822,68 +755,23 @@ with tab7:
             )
             apply_brand_style(fig_rate)
             st.plotly_chart(fig_rate, width='stretch', key="chart-spam-rate-bycat")
-
-    # Comment relevancy analysis
-    st.subheader("Comment Relevancy Analysis")
-    
-    if has_quality and has_relevance:
-        # Quality vs Relevance scatter plot
-        # Server-side 2D binning (hexbin-like via histogram2d)
-        try:
-            x = df["quality_score"].astype(float)
-            y = df["relevance_score"].astype(float)
-            H, xedges, yedges = np.histogram2d(x, y, bins=40)
-            xcenters = (xedges[:-1] + xedges[1:]) / 2
-            ycenters = (yedges[:-1] + yedges[1:]) / 2
-            heat_df = pd.DataFrame([(xc, yc, int(H[i, j])) for i, xc in enumerate(xcenters) for j, yc in enumerate(ycenters)], columns=["quality", "relevance", "count"])
-            heat_df = heat_df[heat_df["count"] > 0]
-            fig_relevance = px.density_heatmap(heat_df, x="quality", y="relevance", z="count", nbinsx=40, nbinsy=40, title="Quality vs Relevancy (binned)")
-            apply_brand_style(fig_relevance)
-            st.plotly_chart(fig_relevance, width='stretch', key="chart-quality-vs-relevance-heat")
-        except Exception:
-            pass
+     
         
-        # Relevancy distribution
-        # Server-side aggregated histogram for relevancy
-        try:
-            counts, bin_edges = np.histogram(df["relevance_score"].dropna().astype(float), bins=20)
-            bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
-            agg_rel = pd.DataFrame({"bin": bin_centers, "count": counts})
-            fig_relevance_dist = px.bar(agg_rel, x="bin", y="count", title="Relevancy Score Distribution")
-            fig_relevance_dist.update_xaxes(title_text="relevance_score")
-            fig_relevance_dist.update_yaxes(title_text="count")
-            apply_brand_style(fig_relevance_dist)
-            st.plotly_chart(fig_relevance_dist, width='stretch', key="chart-relevance-dist")
-        except Exception:
-            pass
-        
-        
-    elif has_quality:
-        st.info("Only quality scores available. Relevancy scores not found in dataset.")
-        # Quality distribution by spam status
-        # Server-side aggregated histogram for quality by spam status
-        try:
-            tmp = df[["quality_score", "is_spam"]].dropna()
-            tmp["quality_score"] = tmp["quality_score"].astype(float)
-            # Compute separate histograms
-            bins = np.linspace(tmp["quality_score"].min(), tmp["quality_score"].max(), 21)
-            rows = []
-            for label in sorted(tmp["is_spam"].astype(str).unique()):
-                arr = tmp[tmp["is_spam"].astype(str) == label]["quality_score"].to_numpy()
-                counts, edges = np.histogram(arr, bins=bins)
-                centers = (edges[:-1] + edges[1:]) / 2
-                for c, xval in zip(counts, centers):
-                    rows.append({"bin": xval, "count": int(c), "is_spam": label})
-            agg_quality = pd.DataFrame(rows)
-            fig_quality = px.bar(agg_quality, x="bin", y="count", color="is_spam", barmode="group", title="Quality Score Distribution by Spam Status")
-            fig_quality.update_xaxes(title_text="quality_score")
-            fig_quality.update_yaxes(title_text="count")
-            apply_brand_style(fig_quality)
-            st.plotly_chart(fig_quality, width='stretch', key="chart-quality-dist-byspam")
-        except Exception:
-            pass
+        # Summary statistics
+        st.subheader("Summary Statistics")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Total Clusters", len(cluster_spam_analysis))
+        with col2:
+            highest_spam_cluster = cluster_spam_analysis.index[0]
+            highest_spam_rate = cluster_spam_analysis.iloc[0]["Spam_Rate"]
+            st.metric("Highest Spam Rate Cluster", f"{highest_spam_cluster} ({highest_spam_rate}%)")
+        with col3:
+            avg_spam_rate = cluster_spam_analysis["Spam_Rate"].mean()
+            st.metric("Average Spam Rate", f"{avg_spam_rate:.1f}%")
+            
     else:
-        st.info("No quality or relevancy scores found in dataset.")
+        st.error("No 'new_cluster' column found. Please ensure clustering has been performed on the dataset.")
 
     # Spam comments table with context
     if has_text:
@@ -918,8 +806,7 @@ with tab7:
             display_cols.insert(0, "post_id")
         
         st.dataframe(
-            df_filtered[display_cols].head(int(sample_size_spam)), 
-            width='stretch', 
+            df_filtered[display_cols].head(int(float(sample_size_spam))), 
             height=400
         )
         
