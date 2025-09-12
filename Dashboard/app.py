@@ -205,9 +205,9 @@ with tab2:
             with col2:
                 sample_size_sentiment = st.number_input(
                     "Rows to show:", 
-                    min_value=11, 
+                    min_value=10, 
                     max_value=1000, 
-                    value=11, 
+                    value=10, 
                     step=5,
                     key="sentiment_sample_size"
                 )
@@ -217,7 +217,12 @@ with tab2:
                 display_cols.insert(0, "post_id")
             if "comment_id" in filtered_df.columns:
                 display_cols.insert(1, "comment_id")
-            st.dataframe(df_sentiment[display_cols].head(int(float(sample_size_sentiment))), height=400)
+            st.dataframe(
+                df_sentiment[display_cols].head(int(float(sample_size_sentiment))).reset_index(drop=True).rename(
+                    lambda x: x + 1, axis="index"
+                ),
+                height=400
+            )
             if len(sentiment_filter_table) > 0:
                 filtered_counts = df_sentiment["sentiment"].value_counts()
                 st.write("**Sentiment counts in filtered data:**")
@@ -347,6 +352,10 @@ with tab4:
                         sorted_keywords = sorted(keywords.items(), key=lambda x: x[1], reverse=True)
                         cat_df = pd.DataFrame(sorted_keywords, columns=["keyword", "count"])
                         cat_df["category"] = category
+                        cat_df = cat_df.reset_index(drop=True)
+                        cat_df.index = cat_df.index + 1
+                        cat_df.index.name = "Index"
+                        st.dataframe(cat_df, height=200)
                         
                         # Calculate redundant keywords (words with same meaning/concept)
                         st.write(f"**{category} Keywords ({len(keywords)} unique words)**")
@@ -382,7 +391,9 @@ with tab4:
                     if uncategorized:
                         other_df = pd.DataFrame(uncategorized, columns=["keyword", "count"])
                         other_df = other_df.sort_values("count", ascending=False)
-                        st.write(f"**Other Keywords ({len(uncategorized)} words)**")
+                        other_df = other_df.reset_index(drop=True)
+                        other_df.index = other_df.index + 1
+                        other_df.index.name = "Index"
                         st.dataframe(other_df, height=200)
                     else:
                         st.write("No uncategorized keywords found.")
@@ -390,6 +401,9 @@ with tab4:
             # Show top keywords (original view)
             st.subheader("All Keywords (Top 50)")
             top_df = pd.DataFrame(freq.most_common(50), columns=["keyword", "count"])
+            top_df = top_df.reset_index(drop=True)
+            top_df.index = top_df.index + 1
+            top_df.index.name = "Index"
             st.dataframe(top_df, height=240)
 
             # Generate word cloud from frequencies
@@ -478,10 +492,8 @@ with tab5:
                 
                 # Limit results
                 display_df = filtered_df.head(max_keywords)
-                
-                # Display the table
                 display_df = display_df.reset_index(drop=True)
-                display_df.index = np.arange(1, len(display_df) + 1)
+                display_df.index = display_df.index + 1
                 display_df.index.name = "Index"
                 st.dataframe(
                     display_df,
@@ -509,7 +521,7 @@ with tab5:
                 # Left-align the numbers by treating them as strings for display
                 category_df['Total Keywords'] = category_df['Total Keywords'].astype(str)
                 category_df = category_df.reset_index(drop=True)
-                category_df.index = np.arange(1, len(category_df) + 1)
+                category_df.index = category_df.index + 1
                 category_df.index.name = "Index"
                 st.dataframe(category_df, height=300, use_container_width=True)
                 
@@ -652,6 +664,9 @@ with tab6:
         df_show = per_label_from_clsrep.copy()
         if "support" in df_show.columns:
             df_show = df_show.sort_values("support", ascending=False).head(10)
+        df_show = df_show.reset_index(drop=True)
+        df_show.index = df_show.index + 1
+        df_show.index.name = "Index"
         st.dataframe(df_show, height=320)
         try:
             fig_f1 = px.bar(df_show, x="label", y="f1-score", title="Top-10 Categories by Support — F1 Scores")
@@ -661,6 +676,9 @@ with tab6:
             pass
     elif os.path.exists(per_label_f1_path):
         per_label_df = pd.read_csv(per_label_f1_path)
+        per_label_df = per_label_df.reset_index(drop=True)
+        per_label_df.index = per_label_df.index + 1
+        per_label_df.index.name = "Index"
         st.dataframe(per_label_df, height=320)
         try:
             fig_f1 = px.bar(per_label_df, x="label", y="f1", title="Per-Label F1 Scores")
@@ -669,8 +687,10 @@ with tab6:
         except Exception:
             pass
     elif classes:
-        st.info("No saved per-label metrics found. Provide classification_report.csv or per_label_f1.csv to visualize actual scores.")
         placeholder_df = pd.DataFrame({"label": classes, "f1": [None] * len(classes)})
+        placeholder_df = placeholder_df.reset_index(drop=True)
+        placeholder_df.index = placeholder_df.index + 1
+        placeholder_df.index.name = "Index"
         st.dataframe(placeholder_df, height=320)
 
     st.divider()
@@ -685,6 +705,9 @@ with tab6:
             comp = df_default.merge(df_tuned, on="label", how="inner")
             comp["delta"] = comp["f1_tuned"] - comp["f1_default"]
             comp_sorted = comp.sort_values("delta", ascending=False)
+            comp_sorted = comp_sorted.reset_index(drop=True)
+            comp_sorted.index = comp_sorted.index + 1
+            comp_sorted.index.name = "Index"
             st.dataframe(comp_sorted, height=340)
             # Chart: show improvement deltas (top 10)
             fig_delta = px.bar(comp_sorted.head(10), x="label", y="delta", title="Top-10 Improvements after Threshold Tuning")
@@ -876,7 +899,7 @@ with tab7:
                 default=[],
             )
         with col2:
-            sample_size_spam = st.number_input("Rows to show", min_value=11, max_value=500, value=11, step=5)
+            sample_size_spam = st.number_input("Rows to show", min_value=10, max_value=500, value=10, step=5)
         with col3:
             if has_video_category and video_cat_col:
                 category_filter = st.selectbox("Filter by category", ["All"] + list(df[video_cat_col].unique()))
@@ -904,7 +927,9 @@ with tab7:
             display_cols.insert(0, "post_id")
         
         st.dataframe(
-            df_filtered[display_cols].head(int(float(sample_size_spam))), 
+            df_filtered[display_cols].head(int(float(sample_size_spam))).reset_index(drop=True).rename(
+                lambda x: x + 1, axis="index"
+            ),
             height=400
         )
         
