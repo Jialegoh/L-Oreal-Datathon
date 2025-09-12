@@ -121,6 +121,77 @@ with tab2:
         fig6 = px.bar(sent_series, x="sentiment", y="count", title="Sentiment Counts")
         apply_brand_style(fig6)
         st.plotly_chart(fig6, width='stretch', key="chart-sentiment-counts")
+
+        # Stacked bar: Sentiment distribution by cluster categories from cluster.txt
+        try:
+            cluster_file_path = os.path.join(os.path.dirname(__file__), "cluster.txt")
+            if os.path.exists(cluster_file_path) and "textOriginal" in filtered_df.columns:
+                with open(cluster_file_path, 'r', encoding='utf-8') as f:
+                    lines = f.read().strip().split('\n')
+
+                # Parse cluster.txt into a mapping: category -> [keywords]
+                category_to_keywords = {}
+                for line in lines:
+                    if not line.strip() or ':' not in line:
+                        continue
+                    category_part, keywords_part = line.split(':', 1)
+                    category_name = category_part.strip().strip("'\"")
+                    kw_text = keywords_part.strip()
+                    if kw_text.startswith('[') and kw_text.endswith(']'):
+                        kw_text = kw_text[1:-1]
+                    keywords = [kw.strip().strip("'\"") for kw in kw_text.split(',') if kw.strip()]
+                    if keywords:
+                        category_to_keywords[category_name] = keywords
+
+                # Build sentiment counts per category using keyword presence in textOriginal
+                if category_to_keywords:
+                    text_series = filtered_df.get("textOriginal", pd.Series([], dtype=str)).fillna("").astype(str).str.lower()
+                    records = []
+                    for category_name, keywords in category_to_keywords.items():
+                        # Build safe regex OR pattern of keywords
+                        safe_parts = [re.escape(k.lower()) for k in keywords if isinstance(k, str) and k]
+                        if not safe_parts:
+                            continue
+                        pattern = "|".join(safe_parts)
+                        try:
+                            mask = text_series.str.contains(pattern, regex=True, na=False)
+                        except Exception:
+                            # Fallback: skip problematic pattern
+                            continue
+                        if mask.any():
+                            counts = filtered_df.loc[mask, "sentiment"].value_counts()
+                            for sentiment_label, count in counts.items():
+                                records.append({
+                                    "Category": category_name,
+                                    "sentiment": sentiment_label,
+                                    "count": int(count)
+                                })
+
+                    if records:
+                        agg_df = pd.DataFrame(records)
+                        pivot_df = agg_df.pivot_table(index="Category", columns="sentiment", values="count", aggfunc="sum", fill_value=0)
+                        # Keep only top 10 categories by total counts across sentiments
+                        pivot_df["__total__"] = pivot_df.sum(axis=1)
+                        pivot_df = pivot_df.sort_values("__total__", ascending=False).head(10)
+                        pivot_df = pivot_df.drop(columns=["__total__"])  # remove helper column
+                        stacked_df = pivot_df.reset_index()
+                        y_cols = [c for c in stacked_df.columns if c not in {"Category"}]
+                        fig_stack = px.bar(
+                            stacked_df,
+                            x="Category",
+                            y=y_cols,
+                            barmode="stack",
+                            title="Sentiment Distribution by Cluster Category"
+                        )
+                        apply_brand_style(fig_stack)
+                        st.plotly_chart(fig_stack, width='stretch', key="chart-sentiment-by-cluster")
+                    else:
+                        st.info("No keyword matches found in comments for cluster categories.")
+            else:
+                if "textOriginal" not in filtered_df.columns:
+                    st.info("No 'textOriginal' column available to map keywords to comments.")
+        except Exception as e:
+            st.warning(f"Could not build stacked sentiment-by-cluster chart: {e}")
         if "textOriginal" in filtered_df.columns:
             st.subheader("Comments by Sentiment")
             col1, col2 = st.columns([2, 1])
@@ -409,6 +480,9 @@ with tab5:
                 display_df = filtered_df.head(max_keywords)
                 
                 # Display the table
+                display_df = display_df.reset_index(drop=True)
+                display_df.index = np.arange(1, len(display_df) + 1)
+                display_df.index.name = "Index"
                 st.dataframe(
                     display_df,
                     height=400,
@@ -432,6 +506,11 @@ with tab5:
                     'Category': category_counts.index,
                     'Total Keywords': category_counts.values
                 })
+                # Left-align the numbers by treating them as strings for display
+                category_df['Total Keywords'] = category_df['Total Keywords'].astype(str)
+                category_df = category_df.reset_index(drop=True)
+                category_df.index = np.arange(1, len(category_df) + 1)
+                category_df.index.name = "Index"
                 st.dataframe(category_df, height=300, use_container_width=True)
                 
             else:
