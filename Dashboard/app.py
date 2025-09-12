@@ -778,17 +778,33 @@ with tab7:
         # Filter controls
         col1, col2, col3 = st.columns([2, 1, 1])
         with col1:
-            show_spam_only = st.checkbox("Show only spam comments", value=True)
+            all_topics = []
+            if "topicCategories_clean" in df.columns:
+                # Flatten all topics from all rows
+                all_topics = sorted(set(
+                    t for sublist in df["topicCategories_clean"].dropna().apply(
+                        lambda x: re.findall(r"'([^']+)'", x) if isinstance(x, str) else []
+                    ) for t in sublist
+                ))
+            selected_topics = st.multiselect(
+                "Filter by topic category",
+                options=all_topics,
+                default=[],
+            )
         with col2:
             sample_size_spam = st.number_input("Rows to show", min_value=11, max_value=500, value=11, step=5)
         with col3:
             if has_video_category and video_cat_col:
                 category_filter = st.selectbox("Filter by category", ["All"] + list(df[video_cat_col].unique()))
         
-        # Apply filters
         df_filtered = df.copy()
-        if show_spam_only:
-            df_filtered = df_filtered[df_filtered["is_spam"].astype(str).str.lower() == "yes"]
+        # Filter by selected topic categories
+        if selected_topics:
+            df_filtered = df_filtered[
+                df_filtered["topicCategories_clean"].apply(
+                    lambda x: any(topic in x for topic in selected_topics) if isinstance(x, str) else False
+                )
+            ]
         if has_video_category and video_cat_col and category_filter != "All":
             df_filtered = df_filtered[df_filtered[video_cat_col] == category_filter]
         
@@ -827,5 +843,3 @@ with tab7:
                 st.metric("Spam Count", spam_count_filtered)
     else:
         st.info("No text column found to display spam comments.")
-
-model_safetensors_path = os.getenv("MODEL_PATH")
