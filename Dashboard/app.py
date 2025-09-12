@@ -236,34 +236,62 @@ with tab2:
 # tab 3: Trends
 with tab3:
     st.subheader("Trends & Distributions")
-    if "quality_score" in filtered_df.columns:
-        st.subheader("Quality Score Distribution")
-        try:
-            counts, bin_edges = np.histogram(filtered_df["quality_score"].dropna().astype(float), bins=50)
-            bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
-            agg_df = pd.DataFrame({"bin": bin_centers, "count": counts})
-            fig5 = px.bar(agg_df, x="bin", y="count", title="Distribution of Quality Scores")
-            fig5.update_xaxes(title_text="quality_score")
-            fig5.update_yaxes(title_text="count")
-            apply_brand_style(fig5)
-            st.plotly_chart(fig5, width='stretch', key="chart-quality-dist")
-        except Exception:
-            pass
+    dist_col1, dist_col2 = st.columns(2)
+    with dist_col1:
+        if "quality_score" in filtered_df.columns:
+            st.subheader("Quality Score Distribution")
+            try:
+                counts, bin_edges = np.histogram(filtered_df["quality_score"].dropna().astype(float), bins=50)
+                bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+                agg_df = pd.DataFrame({"bin": bin_centers, "count": counts})
+                fig5 = px.bar(agg_df, x="bin", y="count", title="Distribution of Quality Scores")
+                fig5.update_xaxes(title_text="quality_score")
+                fig5.update_yaxes(title_text="count")
+                apply_brand_style(fig5)
+                st.plotly_chart(fig5, use_container_width=True, key="chart-quality-dist")
+            except Exception:
+                pass
+    with dist_col2:
+        if "relevance_score" in filtered_df.columns:
+            st.subheader("Relevance Score Distribution")
+            try:
+                counts, bin_edges = np.histogram(filtered_df["relevance_score"].dropna().astype(float), bins=50)
+                bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+                agg_df_rel = pd.DataFrame({"bin": bin_centers, "count": counts})
+                fig_rel = px.bar(agg_df_rel, x="bin", y="count", title="Distribution of Relevance Scores")
+                fig_rel.update_xaxes(title_text="relevance_score")
+                fig_rel.update_yaxes(title_text="count")
+                apply_brand_style(fig_rel)
+                st.plotly_chart(fig_rel, use_container_width=True, key="chart-relevance-dist")
+            except Exception:
+                pass
     
-    # Quality Score by Cluster Category 
     for col in ["new_cluster", "cluster", "predicted_category"]:
-        if col in filtered_df.columns:
-            st.subheader(f"Average Quality Score by {col}")
-            avg_quality = filtered_df.groupby(col)["quality_score"].mean().reset_index()
-            avg_quality = avg_quality.sort_values("quality_score", ascending=False).head(10)
-            fig_quality_cat = px.bar(
-                avg_quality,
-                x=col,
-                y="quality_score",
-                title=f"Top 10 {col} Categories by Avg Quality Score"
-            )
-            apply_brand_style(fig_quality_cat)
-            st.plotly_chart(fig_quality_cat, width='stretch', key=f"chart-quality-by-{col}")
+        if col in filtered_df.columns and "quality_score" in filtered_df.columns and "relevance_score" in filtered_df.columns:
+            st.subheader(f"Average Quality & Relevance Score by {col}")
+            cat_col1, cat_col2 = st.columns(2)
+            with cat_col1:
+                avg_quality = filtered_df.groupby(col)["quality_score"].mean().reset_index()
+                avg_quality = avg_quality.sort_values("quality_score", ascending=False).head(10)
+                fig_quality_cat = px.bar(
+                    avg_quality,
+                    x=col,
+                    y="quality_score",
+                    title=f"Top 10 {col} by Avg Quality Score"
+                )
+                apply_brand_style(fig_quality_cat)
+                st.plotly_chart(fig_quality_cat, use_container_width=True, key=f"chart-quality-by-{col}")
+            with cat_col2:
+                avg_relevance = filtered_df.groupby(col)["relevance_score"].mean().reset_index()
+                avg_relevance = avg_relevance.sort_values("relevance_score", ascending=False).head(10)
+                fig_relevance_cat = px.bar(
+                    avg_relevance,
+                    x=col,
+                    y="relevance_score",
+                    title=f"Top 10 {col} by Avg Relevance Score"
+                )
+                apply_brand_style(fig_relevance_cat)
+                st.plotly_chart(fig_relevance_cat, use_container_width=True, key=f"chart-relevance-by-{col}")
 
     for col in ["new_cluster", "cluster", "predicted_category"]:
         if col in filtered_df.columns:
