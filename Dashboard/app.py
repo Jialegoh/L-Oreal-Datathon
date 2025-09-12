@@ -746,33 +746,6 @@ with tab7:
             apply_brand_style(fig_category)
             st.plotly_chart(fig_category, width='stretch', key="chart-spam-bycat")
             
-            # Spam rate by category
-            fig_rate = px.bar(
-                agg_cat_df, 
-                x=video_cat_col, 
-                y="Spam_Rate", 
-                title="Spam Rate by Video Category (%)"
-            )
-            apply_brand_style(fig_rate)
-            st.plotly_chart(fig_rate, width='stretch', key="chart-spam-rate-bycat")
-     
-        
-        # Summary statistics
-        st.subheader("Summary Statistics")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Total Clusters", len(cluster_spam_analysis))
-        with col2:
-            highest_spam_cluster = cluster_spam_analysis.index[0]
-            highest_spam_rate = cluster_spam_analysis.iloc[0]["Spam_Rate"]
-            st.metric("Highest Spam Rate Cluster", f"{highest_spam_cluster} ({highest_spam_rate}%)")
-        with col3:
-            avg_spam_rate = cluster_spam_analysis["Spam_Rate"].mean()
-            st.metric("Average Spam Rate", f"{avg_spam_rate:.1f}%")
-            
-    else:
-        st.error("No 'new_cluster' column found. Please ensure clustering has been performed on the dataset.")
-
     # Spam comments table with context
     if has_text:
         st.subheader("Spam Comments Analysis")
