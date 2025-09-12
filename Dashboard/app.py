@@ -14,7 +14,7 @@ import stopwordsiso as stopwords_iso
 # Page configuration
 st.set_page_config(page_title="AI Glow-rithms", layout="wide")
 
-st.title("Dashboard")
+st.title("L’Oréal × Monash Datathon — AI Glow-rithms Dashboard")
 st.markdown("Analyse the quality and relevance of comments through Share of Engagement (SoE)")
 
 # Use default Plotly settings
@@ -217,12 +217,20 @@ with tab2:
                 display_cols.insert(0, "post_id")
             if "comment_id" in filtered_df.columns:
                 display_cols.insert(1, "comment_id")
+<<<<<<< Updated upstream
             st.dataframe(
                 df_sentiment[display_cols].head(int(float(sample_size_sentiment))).reset_index(drop=True).rename(
                     lambda x: x + 1, axis="index"
                 ),
                 height=400
             )
+=======
+            display_df = df_sentiment[display_cols].head(int(float(sample_size_sentiment)))
+            display_df = display_df.reset_index(drop=True)
+            display_df.index = np.arange(1, len(display_df) + 1)
+            display_df.index.name = "Index"
+            st.dataframe(display_df, height=400)
+>>>>>>> Stashed changes
             if len(sentiment_filter_table) > 0:
                 filtered_counts = df_sentiment["sentiment"].value_counts()
                 st.write("**Sentiment counts in filtered data:**")
@@ -403,7 +411,10 @@ with tab4:
                         
                         # Calculate redundant keywords (words with same meaning/concept)
                         st.write(f"**{category} Keywords ({len(keywords)} unique words)**")
-                        st.dataframe(cat_df, height=200)
+                        display_df = cat_df.reset_index(drop=True)
+                        display_df.index = np.arange(1, len(display_df) + 1)
+                        display_df.index.name = "Index"
+                        st.dataframe(display_df, height=200)
                         
                         # Show total count for this category
                         total_count = sum(keywords.values())
@@ -435,20 +446,35 @@ with tab4:
                     if uncategorized:
                         other_df = pd.DataFrame(uncategorized, columns=["keyword", "count"])
                         other_df = other_df.sort_values("count", ascending=False)
+<<<<<<< Updated upstream
                         other_df = other_df.reset_index(drop=True)
                         other_df.index = other_df.index + 1
                         other_df.index.name = "Index"
                         st.dataframe(other_df, height=200)
+=======
+                        st.write(f"**Other Keywords ({len(uncategorized)} words)**")
+                        display_df = other_df.reset_index(drop=True)
+                        display_df.index = np.arange(1, len(display_df) + 1)
+                        display_df.index.name = "Index"
+                        st.dataframe(display_df, height=200)
+>>>>>>> Stashed changes
                     else:
                         st.write("No uncategorized keywords found.")
 
             # Show top keywords (original view)
             st.subheader("All Keywords (Top 50)")
             top_df = pd.DataFrame(freq.most_common(50), columns=["keyword", "count"])
+<<<<<<< Updated upstream
             top_df = top_df.reset_index(drop=True)
             top_df.index = top_df.index + 1
             top_df.index.name = "Index"
             st.dataframe(top_df, height=240)
+=======
+            display_df = top_df.reset_index(drop=True)
+            display_df.index = np.arange(1, len(display_df) + 1)
+            display_df.index.name = "Index"
+            st.dataframe(display_df, height=240)
+>>>>>>> Stashed changes
 
             # Generate word cloud from frequencies
             wc = WordCloud(width=1000, height=360, background_color="white")
@@ -458,8 +484,9 @@ with tab4:
             plt.axis("off")
     st.pyplot(plt)
 
-# tab 5: Cluster Analysis (Keywords)
+# tab 5: Classification Model (BERT multi-label)
 with tab5:
+<<<<<<< Updated upstream
     st.subheader("Cluster Analysis — Keywords")
     st.markdown("Analysis of keywords extracted from comments and their assigned categories.")
     
@@ -579,6 +606,8 @@ with tab5:
 
 # tab 6: Classification Model (BERT multi-label)
 with tab6:
+=======
+>>>>>>> Stashed changes
     st.subheader("Classification Model")
     st.markdown("This module classifies user comments into multiple topic categories using a fine-tuned BERT model.")
 
@@ -708,10 +737,17 @@ with tab6:
         df_show = per_label_from_clsrep.copy()
         if "support" in df_show.columns:
             df_show = df_show.sort_values("support", ascending=False).head(10)
+<<<<<<< Updated upstream
         df_show = df_show.reset_index(drop=True)
         df_show.index = df_show.index + 1
         df_show.index.name = "Index"
         st.dataframe(df_show, height=320)
+=======
+        display_df = df_show.reset_index(drop=True)
+        display_df.index = np.arange(1, len(display_df) + 1)
+        display_df.index.name = "Index"
+        st.dataframe(display_df, height=320)
+>>>>>>> Stashed changes
         try:
             fig_f1 = px.bar(df_show, x="label", y="f1-score", title="Top-10 Categories by Support — F1 Scores")
             apply_brand_style(fig_f1)
@@ -720,10 +756,17 @@ with tab6:
             pass
     elif os.path.exists(per_label_f1_path):
         per_label_df = pd.read_csv(per_label_f1_path)
+<<<<<<< Updated upstream
         per_label_df = per_label_df.reset_index(drop=True)
         per_label_df.index = per_label_df.index + 1
         per_label_df.index.name = "Index"
         st.dataframe(per_label_df, height=320)
+=======
+        display_df = per_label_df.reset_index(drop=True)
+        display_df.index = np.arange(1, len(display_df) + 1)
+        display_df.index.name = "Index"
+        st.dataframe(display_df, height=320)
+>>>>>>> Stashed changes
         try:
             fig_f1 = px.bar(per_label_df, x="label", y="f1", title="Per-Label F1 Scores")
             apply_brand_style(fig_f1)
@@ -732,10 +775,17 @@ with tab6:
             pass
     elif classes:
         placeholder_df = pd.DataFrame({"label": classes, "f1": [None] * len(classes)})
+<<<<<<< Updated upstream
         placeholder_df = placeholder_df.reset_index(drop=True)
         placeholder_df.index = placeholder_df.index + 1
         placeholder_df.index.name = "Index"
         st.dataframe(placeholder_df, height=320)
+=======
+        display_df = placeholder_df.reset_index(drop=True)
+        display_df.index = np.arange(1, len(display_df) + 1)
+        display_df.index.name = "Index"
+        st.dataframe(display_df, height=320)
+>>>>>>> Stashed changes
 
     st.divider()
 
@@ -749,10 +799,17 @@ with tab6:
             comp = df_default.merge(df_tuned, on="label", how="inner")
             comp["delta"] = comp["f1_tuned"] - comp["f1_default"]
             comp_sorted = comp.sort_values("delta", ascending=False)
+<<<<<<< Updated upstream
             comp_sorted = comp_sorted.reset_index(drop=True)
             comp_sorted.index = comp_sorted.index + 1
             comp_sorted.index.name = "Index"
             st.dataframe(comp_sorted, height=340)
+=======
+            display_df = comp_sorted.reset_index(drop=True)
+            display_df.index = np.arange(1, len(display_df) + 1)
+            display_df.index.name = "Index"
+            st.dataframe(display_df, height=340)
+>>>>>>> Stashed changes
             # Chart: show improvement deltas (top 10)
             fig_delta = px.bar(comp_sorted.head(10), x="label", y="delta", title="Top-10 Improvements after Threshold Tuning")
             apply_brand_style(fig_delta)
@@ -819,6 +876,127 @@ with tab6:
                 st.markdown("Predicted categories (thresholded): " + ", ".join(pred_labels) if pred_labels else "None above threshold")
         else:
             st.info("Model not available or no input text provided.")
+
+# tab 6: Cluster Analysis (Keywords)
+with tab6:
+    st.subheader("Cluster Analysis — Keywords")
+    st.markdown("Analysis of keywords extracted from comments and their assigned categories.")
+    
+    # Load cluster.txt file
+    cluster_file_path = os.path.join(os.path.dirname(__file__), "cluster.txt")
+    
+    if os.path.exists(cluster_file_path):
+        try:
+            # Read the cluster.txt file
+            with open(cluster_file_path, 'r', encoding='utf-8') as file:
+                content = file.read()
+            
+            # Parse the content to extract categories and keywords
+            categories_data = []
+            lines = content.strip().split('\n')
+            
+            for line in lines:
+                if line.strip():
+                    # Split by colon to separate category name from keywords
+                    if ':' in line:
+                        category_part, keywords_part = line.split(':', 1)
+                        category_name = category_part.strip().strip("'\"")
+                        
+                        # Extract keywords from the list format
+                        keywords_text = keywords_part.strip()
+                        if keywords_text.startswith('[') and keywords_text.endswith(']'):
+                            keywords_text = keywords_text[1:-1]  # Remove brackets
+                        
+                        # Split by comma and clean up keywords
+                        keywords = [kw.strip().strip("'\"") for kw in keywords_text.split(',')]
+                        
+                        # Add each keyword with its category
+                        for keyword in keywords:
+                            if keyword:  # Skip empty keywords
+                                categories_data.append({
+                                    'Keyword': keyword,
+                                    'Category': category_name
+                                })
+            
+            if categories_data:
+                # Create DataFrame
+                keywords_df = pd.DataFrame(categories_data)
+                
+                # Count keyword frequencies
+                keyword_counts = keywords_df['Keyword'].value_counts().reset_index()
+                keyword_counts.columns = ['Keyword', 'Count']
+                
+                # Merge with categories
+                result_df = keyword_counts.merge(
+                    keywords_df[['Keyword', 'Category']].drop_duplicates(), 
+                    on='Keyword', 
+                    how='left'
+                )
+                
+                # Sort by count (descending)
+                result_df = result_df.sort_values('Count', ascending=False)
+                
+                # Display controls
+                col1, col2 = st.columns([2, 1])
+                with col1:
+                    selected_category = st.selectbox(
+                        "Filter by category:",
+                        options=["(All)"] + sorted(result_df['Category'].unique().tolist()),
+                        index=0,
+                    )
+                with col2:
+                    max_keywords = st.number_input("Max keywords to show", min_value=10, max_value=500, value=100, step=10)
+                
+                # Filter by category if selected
+                if selected_category != "(All)":
+                    filtered_df = result_df[result_df['Category'] == selected_category]
+                else:
+                    filtered_df = result_df
+                
+                # Limit results
+                display_df = filtered_df.head(max_keywords)
+                
+                # Display the table
+                display_df = display_df.reset_index(drop=True)
+                display_df.index = np.arange(1, len(display_df) + 1)
+                display_df.index.name = "Index"
+                st.dataframe(
+                    display_df,
+                    height=400,
+                    use_container_width=True
+                )
+                
+                # Display summary statistics
+                st.subheader("Summary Statistics")
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Total Keywords", len(result_df))
+                with col2:
+                    st.metric("Total Categories", result_df['Category'].nunique())
+                with col3:
+                    st.metric("Most Frequent Keyword", f"{result_df.iloc[0]['Keyword']} ({result_df.iloc[0]['Count']})")
+                
+                # Show top categories by keyword count
+                st.subheader("Top Categories by Keyword Count")
+                category_counts = result_df.groupby('Category')['Count'].sum().sort_values(ascending=False).head(10)
+                category_df = pd.DataFrame({
+                    'Category': category_counts.index,
+                    'Total Keywords': category_counts.values
+                })
+                # Left-align the numbers by treating them as strings for display
+                category_df['Total Keywords'] = category_df['Total Keywords'].astype(str)
+                category_df = category_df.reset_index(drop=True)
+                category_df.index = np.arange(1, len(category_df) + 1)
+                category_df.index.name = "Index"
+                st.dataframe(category_df, height=300, use_container_width=True)
+                
+            else:
+                st.warning("No keywords found in the cluster.txt file.")
+                
+        except Exception as e:
+            st.error(f"Error reading cluster.txt file: {str(e)}")
+    else:
+        st.error("cluster.txt file not found. Please ensure the file exists in the Dashboard directory.")
 
 # tab 7: Spam Model
 with tab7:
@@ -970,10 +1148,18 @@ with tab7:
         if "post_id" in df.columns:
             display_cols.insert(0, "post_id")
         
+        display_df = df_filtered[display_cols].head(int(float(sample_size_spam)))
+        display_df = display_df.reset_index(drop=True)
+        display_df.index = np.arange(1, len(display_df) + 1)
+        display_df.index.name = "Index"
         st.dataframe(
+<<<<<<< Updated upstream
             df_filtered[display_cols].head(int(float(sample_size_spam))).reset_index(drop=True).rename(
                 lambda x: x + 1, axis="index"
             ),
+=======
+            display_df, 
+>>>>>>> Stashed changes
             height=400
         )
         
