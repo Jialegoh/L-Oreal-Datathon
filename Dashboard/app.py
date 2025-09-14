@@ -3,7 +3,6 @@ import pandas as pd
 import plotly.express as px
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-# Use default matplotlib styling
 from collections import Counter
 import os
 import json
@@ -17,15 +16,11 @@ st.set_page_config(page_title="AI Glow-rithms", layout="wide")
 st.title("Dashboard")
 st.markdown("Analyse the quality and relevance of comments through Share of Engagement (SoE)")
 
-# Use default Plotly settings
 
-
-# Use default Plotly styling
 def apply_brand_style(fig):
-    # No custom styling - use Streamlit/Plotly defaults
     pass
 
-# Load data from selectable sources (auto-priority)
+# Load data from selectable sources
 base_dir = os.path.dirname(__file__)
 project_root = os.path.normpath(os.path.join(base_dir, ".."))
 ai_root = os.path.join(project_root, "AI_Model")
