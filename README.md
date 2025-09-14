@@ -8,6 +8,14 @@
 A new interactive dashboard is available in the `Dashboard` folder (`app.py`).  
 It provides multi-tab analysis of comment quality, relevance, sentiment, spam detection, clustering, keyword trends, and BERT-based classification.
 
+## ⚡ Installation
+
+Install dependencies before running the dashboard:
+
+```bash
+pip install -r Dashboard/requirements.txt
+```
+
 **To run the dashboard:**
 ```bash
 cd Dashboard
