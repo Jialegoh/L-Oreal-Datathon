@@ -11,14 +11,393 @@ import re
 import stopwordsiso as stopwords_iso
 
 # Page configuration
-st.set_page_config(page_title="AI Glow-rithms", layout="wide")
+st.set_page_config(page_title="AI Glow-rithms", layout="wide", initial_sidebar_state="expanded")
 
-st.title("L’Oréal × Monash Datathon — AI Glow-rithms Dashboard")
-st.markdown("Analyse the quality and relevance of comments through Share of Engagement (SoE)")
+st.markdown("""
+<style>
+    /* L’Oréal Brand Colors */
+    :root {
+        --loreal-black: #000000;
+        --loreal-white: #FFFFFF;
+        --loreal-red: #ED1B2E;
+        --loreal-grey: #6D6E70;
+        --loreal-light-grey: #D7D7D8;
+    }
+
+    /* Main app styling */
+    .main .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 1200px;
+        background-color: #FFFFFF;
+    }
+
+    .main {
+        background-color: #FFFFFF !important;
+    }
+
+    .stApp {
+        background-color: #FFFFFF !important;
+    }
+
+    /* Header styling */
+    .main h1 {
+        color: var(--loreal-black) !important;
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .main h2 {
+        color: var(--loreal-black) !important;
+        font-weight: 600;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .main h3 {
+        color: var(--loreal-black) !important;
+        font-weight: 600;
+        font-size: 1.4rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .main h4 {
+        color: var(--loreal-black) !important;
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* General text / paragraphs / divs */
+    .main p, .main div {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Force ALL text elements to be black */
+    .main * {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Override any specific text color classes */
+    .main span, .main label, .main small, .main strong, .main em {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Force all subheaders to be black */
+    .main h1, .main h2, .main h3, .main h4, .main h5, .main h6 {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Override Streamlit's default text colors */
+    .main .stMarkdown, .main .stText, .main .stWrite {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Force metric text to be black */
+    .main [data-testid="metric-container"] * {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Override any remaining text elements */
+    .main .element-container, .main .block-container {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Nuclear option - force ALL text to be black */
+    .main, .main *, .main *::before, .main *::after {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Specific overrides for common Streamlit elements */
+    .main .stAlert, .main .stSuccess, .main .stWarning, .main .stError {
+        color: var(--loreal-black) !important;
+    }
+    
+    .main .stAlert *, .main .stSuccess *, .main .stWarning *, .main .stError * {
+        color: var(--loreal-black) !important;
+    }
+
+    /* Metric container / styling */
+    .main [data-testid="metric-container"] {
+        background-color: var(--loreal-white) !important;
+        border: 1px solid var(--loreal-light-grey) !important;
+        padding: 1rem !important;
+        border-radius: 8px !important;
+    }
+
+    /* Metric label and value overrides */
+    .main [data-testid="metric-container"] [data-testid="metric-label"] {
+        color: var(--loreal-black) !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+    }
+
+    .main [data-testid="metric-container"] [data-testid="metric-value"] {
+        color: var(--loreal-black) !important;
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+    }
+
+    /* Additional more specific overrides (for deeper inner structure) */
+    div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
+        color: var(--loreal-black) !important;
+    }
+
+    div[data-testid="metric-container"] > label[data-testid="stMetricValue"] > div {
+        color: var(--loreal-black) !important;
+    }
+
+    /* Container / panels styling */
+    .main [data-testid="stHorizontalBlock"] > div {
+        border: 1px solid var(--loreal-light-grey) !important;
+        border-radius: 8px !important;
+        padding: 1rem !important;
+        background-color: #F5F5F5 !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    }
+
+    /* Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        background-color: var(--loreal-white) !important;
+        color: var(--loreal-grey) !important;
+        border: 1px solid var(--loreal-light-grey) !important;
+        border-radius: 8px 8px 0 0 !important;
+        padding: 0.75rem 1.5rem !important;
+        font-weight: 500 !important;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background-color: var(--loreal-red) !important;
+        color: var(--loreal-white) !important;
+        border-color: var(--loreal-red) !important;
+    }
+
+    /* Sidebar */
+    .css-1d391kg {
+        background-color: #F5F5F5 !important;
+    }
+
+    .sidebar .sidebar-content {
+        background-color: #F5F5F5 !important;
+    }
+
+    .sidebar h3 {
+        color: var(--loreal-black) !important;
+    }
+
+    /* Selectbox */
+    .stSelectbox > div > div {
+        background-color: var(--loreal-white) !important;
+        border: 1px solid var(--loreal-light-grey) !important;
+        color: var(--loreal-black) !important;
+    }
+
+    /* Buttons */
+    .stButton > button {
+        background-color: var(--loreal-red) !important;
+        color: var(--loreal-white) !important;
+        border: none !important;
+        border-radius: 6px !important;
+        font-weight: 600 !important;
+        padding: 0.5rem 1rem !important;
+    }
+
+    .stButton > button:hover {
+        background-color: #c41e3a !important;
+    }
+
+    /* Divider */
+    .stDivider {
+        border-color: var(--loreal-light-grey) !important;
+    }
+
+    /* Alerts / messages */
+    .stSuccess {
+        background-color: #f0f9ff !important;
+        border-left: 4px solid var(--loreal-red) !important;
+    }
+
+    .stWarning {
+        background-color: #fffbeb !important;
+        border-left: 4px solid #f59e0b !important;
+    }
+
+    .stError {
+        background-color: #fef2f2 !important;
+        border-left: 4px solid var(--loreal-red) !important;
+    }
+
+    /* Charts (Plotly) */
+    .js-plotly-plot {
+        background-color: var(--loreal-white) !important;
+        border: 1px solid var(--loreal-light-grey) !important;
+        border-radius: 8px !important;
+    }
+
+    /* Form / input labels */
+    .stSelectbox label, .stMultiselect label, .stSlider label {
+        color: var(--loreal-black) !important;
+        font-weight: 600 !important;
+    }
+
+    .stSelectbox > div > div > div {
+        color: var(--loreal-black) !important;
+    }
+
+    .stMultiselect > div > div {
+        background-color: var(--loreal-white) !important;
+        border: 1px solid var(--loreal-light-grey) !important;
+        color: var(--loreal-black) !important;
+    }
+
+    .stSlider > div > div > div {
+        background-color: var(--loreal-red) !important;
+    }
+
+    .stSlider > div > div > div > div {
+        background-color: var(--loreal-red) !important;
+    }
+
+    /* Bordered containers */
+    .stContainer {
+        border: 1px solid var(--loreal-light-grey) !important;
+        border-radius: 8px !important;
+        padding: 1rem !important;
+        background-color: #F5F5F5 !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    }
+
+    /* DataFrame / tables */
+    .stDataFrame {
+        border: 1px solid var(--loreal-light-grey) !important;
+        border-radius: 8px !important;
+    }
+
+    /* Word cloud / custom containers */
+    .wordcloud-container {
+        background-color: #F5F5F5 !important;
+        border: 1px solid var(--loreal-light-grey) !important;
+        border-radius: 8px !important;
+        padding: 1rem !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    }
+
+    /* Alert boxes styling */
+    .stAlert {
+        border-left: 4px solid var(--loreal-red) !important;
+        background-color: #fef2f2 !important;
+    }
+
+    /* Progress bars */
+    .stProgress > div > div > div > div {
+        background-color: var(--loreal-red) !important;
+    }
+
+    /* Expander header / content */
+    .streamlit-expanderHeader {
+        background-color: #F5F5F5 !important;
+        color: var(--loreal-black) !important;
+        border: 1px solid var(--loreal-light-grey) !important;
+    }
+
+    .streamlit-expanderContent {
+        background-color: #F5F5F5 !important;
+        border: 1px solid var(--loreal-light-grey) !important;
+        border-top: none !important;
+    }
+
+    /* Code block styling */
+    .stCode {
+        background-color: #f8f9fa !important;
+        border: 1px solid var(--loreal-light-grey) !important;
+        border-radius: 6px !important;
+    }
+
+        /* 🔹 Force ALL metric labels (top text) to black */
+    div[data-testid="stMetric"] label[data-testid="stMetricLabel"] p,
+    div[data-testid="stMetric"] label[data-testid="stMetricLabel"] * {
+        color: var(--loreal-black) !important;
+    }
+
+    /* 🔹 Force ALL metric values (numbers) to black */
+    div[data-testid="stMetric"] div[data-testid="stMetricValue"] * {
+        color: var(--loreal-black) !important;
+    }
 
 
+</style>
+""", unsafe_allow_html=True)
+
+
+# L'Oréal Brand Plotly Styling
 def apply_brand_style(fig):
-    pass
+    """Apply L'Oréal brand colors and styling to Plotly figures"""
+    fig.update_layout(
+        font=dict(
+            family="Arial, sans-serif",
+            size=12,
+            color="#000000"
+        ),
+        plot_bgcolor="#FFFFFF",
+        paper_bgcolor="#FFFFFF",
+        title_font=dict(
+            size=16,
+            color="#000000",
+            family="Arial, sans-serif"
+        ),
+        legend=dict(
+            font=dict(color="#000000", size=11),
+            bgcolor="#FFFFFF",
+            bordercolor="#D7D7D8",
+            borderwidth=1
+        ),
+        xaxis=dict(
+            color="#000000",
+            gridcolor="#D7D7D8",
+            linecolor="#D7D7D8",
+            tickfont=dict(color="#000000")
+        ),
+        yaxis=dict(
+            color="#000000",
+            gridcolor="#D7D7D8",
+            linecolor="#D7D7D8",
+            tickfont=dict(color="#000000")
+        ),
+        colorway=["#ED1B2E", "#000000", "#6D6E70", "#D7D7D8", "#FFFFFF"]
+    )
+    return fig
+
+def highlight_metric(metric_value, threshold_high=None, threshold_low=None):
+    """Highlight metrics with L'Oréal red if they exceed thresholds"""
+    if threshold_high and metric_value > threshold_high:
+        return f'<div style="color: #ED1B2E; font-weight: 700;">{metric_value}</div>'
+    elif threshold_low and metric_value < threshold_low:
+        return f'<div style="color: #ED1B2E; font-weight: 700;">{metric_value}</div>'
+    else:
+        return metric_value
+
+def create_metric_card(title, value, delta=None, delta_color="normal"):
+    """Create a styled metric card with L'Oréal branding"""
+    if delta:
+        if delta_color == "normal":
+            delta_color = "#6D6E70"
+        elif delta_color == "inverse":
+            delta_color = "#ED1B2E"
+        
+        st.metric(
+            label=title,
+            value=value,
+            delta=delta,
+            delta_color=delta_color
+        )
+    else:
+        st.metric(label=title, value=value)
 
 # Load data from selectable sources
 base_dir = os.path.dirname(__file__)
@@ -52,36 +431,50 @@ if df.empty:
 filtered_df = df.copy()
 
 # Adding tab for better orgnasation
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Trends", "WordCloud", "Cluster Analysis (Keywords)", "Classification Model", "Spam Detection"])
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Trends", "WordCloud", "Classification Model", "Cluster Analysis (Keywords)", "Spam Detection"])
 
 # tab 1: Overview
 with tab1:
-    st.subheader("Key Metrics")
+    # ---- Row 2: Three Equal Columns ----
     col1, col2, col3 = st.columns(3)
-    col1.metric("Total Comments", len(filtered_df))
-    if "quality_score" in filtered_df.columns:
-        col2.metric("Avg Quality Score", f"{filtered_df['quality_score'].mean():.2f}")
-    if "relevance_score" in filtered_df.columns:
-        col3.metric("Avg Relevance Score", f"{filtered_df['relevance_score'].mean():.2f}")
-    st.divider()
-    # Sentiment and Spam Pie Charts in the same row
-    pie_col1, pie_col2 = st.columns(2)
-    with pie_col1:
+
+    # Metrics container again (mirroring size of others)
+    with col1:
+        with st.container(border=True):
+            st.subheader("Key Metrics ")
+            st.metric("Total Comments", len(filtered_df))
+            if "quality_score" in filtered_df.columns:
+                st.metric("Avg Quality", f"{filtered_df['quality_score'].mean():.2f}")
+            if "relevance_score" in filtered_df.columns:
+                st.metric("Avg Relevance", f"{filtered_df['relevance_score'].mean():.2f}")
+
+    # Sentiment pie chart
+    with col2:
         if "sentiment" in filtered_df.columns:
-            st.subheader("Sentiment Distribution (Pie Chart)")
-            sent_counts = filtered_df["sentiment"].value_counts().reset_index()
-            sent_counts.columns = ["sentiment", "count"]
-            fig_sent = px.pie(sent_counts, names="sentiment", values="count", title="Sentiment Distribution")
-            apply_brand_style(fig_sent)
-            st.plotly_chart(fig_sent, use_container_width=True, key="overview-sentiment-pie")
-    with pie_col2:
+            with st.container(border=True):
+                sent_counts = filtered_df["sentiment"].value_counts().reset_index()
+                sent_counts.columns = ["sentiment", "count"]
+                fig_sent = px.pie(sent_counts, names="sentiment", values="count", title="Sentiment Distribution")
+                apply_brand_style(fig_sent)
+                st.plotly_chart(fig_sent, use_container_width=True, key="overview-sentiment-pie")
+
+    # Spam pie chart
+    with col3:
         if "is_spam" in filtered_df.columns:
-            st.subheader("Spam vs Non-Spam (Pie Chart)")
-            spam_counts = filtered_df["is_spam"].astype(str).str.lower().replace({"yes": "Spam", "no": "Non-Spam"}).value_counts().reset_index()
-            spam_counts.columns = ["is_spam", "count"]
-            fig_spam = px.pie(spam_counts, names="is_spam", values="count", title="Spam vs Non-Spam")
-            apply_brand_style(fig_spam)
-            st.plotly_chart(fig_spam, use_container_width=True, key="overview-spam-pie")
+            with st.container(border=True):
+                spam_counts = (
+                    filtered_df["is_spam"]
+                    .astype(str)
+                    .str.lower()
+                    .replace({"yes": "Spam", "no": "Non-Spam"})
+                    .value_counts()
+                    .reset_index()
+                )
+                spam_counts.columns = ["is_spam", "count"]
+                fig_spam = px.pie(spam_counts, names="is_spam", values="count", title="Spam vs Non-Spam")
+                apply_brand_style(fig_spam)
+                st.plotly_chart(fig_spam, use_container_width=True, key="overview-spam-pie")
+
     st.divider()
     # Quality Score and Relevance Score Histograms in the same row
     hist_col1, hist_col2 = st.columns(2)
@@ -116,6 +509,48 @@ with tab2:
         fig6 = px.bar(sent_series, x="sentiment", y="count", title="Sentiment Counts")
         apply_brand_style(fig6)
         st.plotly_chart(fig6, width='stretch', key="chart-sentiment-counts")
+
+        # Sentiment counts in filtered data
+        if "textOriginal" in filtered_df.columns:
+            st.subheader("Comments by Sentiment")
+            col1, col2 = st.columns([2, 1])
+            with col1:
+                sentiment_filter_table = st.multiselect(
+                    "Filter by sentiment:",
+                    options=filtered_df["sentiment"].unique(),
+                    default=filtered_df["sentiment"].unique(),
+                    key="sentiment_table_filter"
+                )
+            with col2:
+                sample_size_sentiment = st.number_input(
+                    "Rows to show:", 
+                    min_value=10, 
+                    max_value=1000, 
+                    value=10, 
+                    step=5,
+                    key="sentiment_sample_size"
+                )
+            df_sentiment = filtered_df[filtered_df["sentiment"].isin(sentiment_filter_table)]
+            display_cols = ["textOriginal", "sentiment"]
+            if "post_id" in filtered_df.columns:
+                display_cols.insert(0, "post_id")
+            if "comment_id" in filtered_df.columns:
+                display_cols.insert(1, "comment_id")
+            st.dataframe(
+                df_sentiment[display_cols].head(int(float(sample_size_sentiment))).reset_index(drop=True).rename(
+                    lambda x: x + 1, axis="index"
+                ),
+                height=400
+            )
+            if len(sentiment_filter_table) > 0:
+                filtered_counts = df_sentiment["sentiment"].value_counts()
+                st.write("**Sentiment counts in filtered data:**")
+                # Show sentiment counts as metrics
+                metric_cols = st.columns(len(filtered_counts))
+                for i, (sentiment, count) in enumerate(filtered_counts.items()):
+                    metric_cols[i].metric(f"{sentiment} Count", count)
+        else:
+            st.info("No 'textOriginal' column found to display comments with sentiment.")
 
         # Stacked bar: Sentiment distribution by cluster categories from cluster.txt
         try:
@@ -187,54 +622,6 @@ with tab2:
                     st.info("No 'textOriginal' column available to map keywords to comments.")
         except Exception as e:
             st.warning(f"Could not build stacked sentiment-by-cluster chart: {e}")
-        if "textOriginal" in filtered_df.columns:
-            st.subheader("Comments by Sentiment")
-            col1, col2 = st.columns([2, 1])
-            with col1:
-                sentiment_filter_table = st.multiselect(
-                    "Filter by sentiment:",
-                    options=filtered_df["sentiment"].unique(),
-                    default=filtered_df["sentiment"].unique(),
-                    key="sentiment_table_filter"
-                )
-            with col2:
-                sample_size_sentiment = st.number_input(
-                    "Rows to show:", 
-                    min_value=10, 
-                    max_value=1000, 
-                    value=10, 
-                    step=5,
-                    key="sentiment_sample_size"
-                )
-            df_sentiment = filtered_df[filtered_df["sentiment"].isin(sentiment_filter_table)]
-            display_cols = ["textOriginal", "sentiment"]
-            if "post_id" in filtered_df.columns:
-                display_cols.insert(0, "post_id")
-            if "comment_id" in filtered_df.columns:
-                display_cols.insert(1, "comment_id")
-<<<<<<< Updated upstream
-            st.dataframe(
-                df_sentiment[display_cols].head(int(float(sample_size_sentiment))).reset_index(drop=True).rename(
-                    lambda x: x + 1, axis="index"
-                ),
-                height=400
-            )
-=======
-            display_df = df_sentiment[display_cols].head(int(float(sample_size_sentiment)))
-            display_df = display_df.reset_index(drop=True)
-            display_df.index = np.arange(1, len(display_df) + 1)
-            display_df.index.name = "Index"
-            st.dataframe(display_df, height=400)
->>>>>>> Stashed changes
-            if len(sentiment_filter_table) > 0:
-                filtered_counts = df_sentiment["sentiment"].value_counts()
-                st.write("**Sentiment counts in filtered data:**")
-                # Show sentiment counts as metrics
-                metric_cols = st.columns(len(filtered_counts))
-                for i, (sentiment, count) in enumerate(filtered_counts.items()):
-                    metric_cols[i].metric(f"{sentiment} Count", count)
-        else:
-            st.info("No 'textOriginal' column found to display comments with sentiment.")
 
 # tab 3: Trends
 with tab3:
@@ -441,170 +828,54 @@ with tab4:
                     if uncategorized:
                         other_df = pd.DataFrame(uncategorized, columns=["keyword", "count"])
                         other_df = other_df.sort_values("count", ascending=False)
-<<<<<<< Updated upstream
                         other_df = other_df.reset_index(drop=True)
                         other_df.index = other_df.index + 1
                         other_df.index.name = "Index"
                         st.dataframe(other_df, height=200)
-=======
-                        st.write(f"**Other Keywords ({len(uncategorized)} words)**")
-                        display_df = other_df.reset_index(drop=True)
-                        display_df.index = np.arange(1, len(display_df) + 1)
-                        display_df.index.name = "Index"
-                        st.dataframe(display_df, height=200)
->>>>>>> Stashed changes
                     else:
                         st.write("No uncategorized keywords found.")
 
             # Show top keywords (original view)
             st.subheader("All Keywords (Top 50)")
             top_df = pd.DataFrame(freq.most_common(50), columns=["keyword", "count"])
-<<<<<<< Updated upstream
             top_df = top_df.reset_index(drop=True)
             top_df.index = top_df.index + 1
             top_df.index.name = "Index"
             st.dataframe(top_df, height=240)
-=======
-            display_df = top_df.reset_index(drop=True)
-            display_df.index = np.arange(1, len(display_df) + 1)
-            display_df.index.name = "Index"
-            st.dataframe(display_df, height=240)
->>>>>>> Stashed changes
 
-            # Generate word cloud from frequencies
-            wc = WordCloud(width=1000, height=360, background_color="white")
+            # Generate word cloud from frequencies with L'Oréal brand colors
+            wc = WordCloud(
+                width=1000, 
+                height=360, 
+                background_color="#FFFFFF",
+                colormap='Reds_r',  # Use red color scheme matching L'Oréal red
+                max_words=max_words,
+                font_path=None,
+                prefer_horizontal=0.9,
+                relative_scaling=0.5
+            )
             wc = wc.generate_from_frequencies(dict(freq.most_common(max_words)))
-            plt.figure(figsize=(16, 6))
-            plt.imshow(wc, interpolation="bilinear")
-            plt.axis("off")
-    st.pyplot(plt)
+            
+            # Create figure with L'Oréal brand styling
+            fig, ax = plt.subplots(figsize=(16, 6))
+            ax.imshow(wc, interpolation="bilinear")
+            ax.axis("off")
+            
+            # Set background color to white
+            fig.patch.set_facecolor('#FFFFFF')
+            ax.set_facecolor('#FFFFFF')
+            
+            # Add subtle border
+            for spine in ax.spines.values():
+                spine.set_edgecolor('#D7D7D8')
+                spine.set_linewidth(1)
+    
+    st.pyplot(fig)
 
 # tab 5: Classification Model (BERT multi-label)
 with tab5:
-<<<<<<< Updated upstream
-    st.subheader("Cluster Analysis — Keywords")
-    st.markdown("Analysis of keywords extracted from comments and their assigned categories.")
-    
-    # Load cluster.txt file
-    cluster_file_path = os.path.join(os.path.dirname(__file__), "cluster.txt")
-    
-    if os.path.exists(cluster_file_path):
-        try:
-            # Read the cluster.txt file
-            with open(cluster_file_path, 'r', encoding='utf-8') as file:
-                content = file.read()
-            
-            # Parse the content to extract categories and keywords
-            categories_data = []
-            lines = content.strip().split('\n')
-            
-            for line in lines:
-                if line.strip():
-                    # Split by colon to separate category name from keywords
-                    if ':' in line:
-                        category_part, keywords_part = line.split(':', 1)
-                        category_name = category_part.strip().strip("'\"")
-                        
-                        # Extract keywords from the list format
-                        keywords_text = keywords_part.strip()
-                        if keywords_text.startswith('[') and keywords_text.endswith(']'):
-                            keywords_text = keywords_text[1:-1]  # Remove brackets
-                        
-                        # Split by comma and clean up keywords
-                        keywords = [kw.strip().strip("'\"") for kw in keywords_text.split(',')]
-                        
-                        # Add each keyword with its category
-                        for keyword in keywords:
-                            if keyword:  # Skip empty keywords
-                                categories_data.append({
-                                    'Keyword': keyword,
-                                    'Category': category_name
-                                })
-            
-            if categories_data:
-                # Create DataFrame
-                keywords_df = pd.DataFrame(categories_data)
-                
-                # Count keyword frequencies
-                keyword_counts = keywords_df['Keyword'].value_counts().reset_index()
-                keyword_counts.columns = ['Keyword', 'Count']
-                
-                # Merge with categories
-                result_df = keyword_counts.merge(
-                    keywords_df[['Keyword', 'Category']].drop_duplicates(), 
-                    on='Keyword', 
-                    how='left'
-                )
-                
-                # Sort by count (descending)
-                result_df = result_df.sort_values('Count', ascending=False)
-                
-                # Display controls
-                col1, col2 = st.columns([2, 1])
-                with col1:
-                    selected_category = st.selectbox(
-                        "Filter by category:",
-                        options=["(All)"] + sorted(result_df['Category'].unique().tolist()),
-                        index=0,
-                    )
-                with col2:
-                    max_keywords = st.number_input("Max keywords to show", min_value=10, max_value=500, value=100, step=10)
-                
-                # Filter by category if selected
-                if selected_category != "(All)":
-                    filtered_df = result_df[result_df['Category'] == selected_category]
-                else:
-                    filtered_df = result_df
-                
-                # Limit results
-                display_df = filtered_df.head(max_keywords)
-                display_df = display_df.reset_index(drop=True)
-                display_df.index = display_df.index + 1
-                display_df.index.name = "Index"
-                st.dataframe(
-                    display_df,
-                    height=400,
-                    use_container_width=True
-                )
-                
-                # Display summary statistics
-                st.subheader("Summary Statistics")
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.metric("Total Keywords", len(result_df))
-                with col2:
-                    st.metric("Total Categories", result_df['Category'].nunique())
-                with col3:
-                    st.metric("Most Frequent Keyword", f"{result_df.iloc[0]['Keyword']} ({result_df.iloc[0]['Count']})")
-                
-                # Show top categories by keyword count
-                st.subheader("Top Categories by Keyword Count")
-                category_counts = result_df.groupby('Category')['Count'].sum().sort_values(ascending=False).head(10)
-                category_df = pd.DataFrame({
-                    'Category': category_counts.index,
-                    'Total Keywords': category_counts.values
-                })
-                # Left-align the numbers by treating them as strings for display
-                category_df['Total Keywords'] = category_df['Total Keywords'].astype(str)
-                category_df = category_df.reset_index(drop=True)
-                category_df.index = category_df.index + 1
-                category_df.index.name = "Index"
-                st.dataframe(category_df, height=300, use_container_width=True)
-                
-            else:
-                st.warning("No keywords found in the cluster.txt file.")
-                
-        except Exception as e:
-            st.error(f"Error reading cluster.txt file: {str(e)}")
-    else:
-        st.error("cluster.txt file not found. Please ensure the file exists in the Dashboard directory.")
-
-# tab 6: Classification Model (BERT multi-label)
-with tab6:
-=======
->>>>>>> Stashed changes
     st.subheader("Classification Model")
-    st.markdown("This module classifies user comments into multiple topic categories using a fine-tuned BERT model.")
+    st.markdown("This module classifies user comments into multiple topic categories using a BERT multi-label model.")
 
     # Paths
     dashboard_dir = os.path.dirname(__file__)
@@ -732,17 +1003,10 @@ with tab6:
         df_show = per_label_from_clsrep.copy()
         if "support" in df_show.columns:
             df_show = df_show.sort_values("support", ascending=False).head(10)
-<<<<<<< Updated upstream
         df_show = df_show.reset_index(drop=True)
         df_show.index = df_show.index + 1
         df_show.index.name = "Index"
         st.dataframe(df_show, height=320)
-=======
-        display_df = df_show.reset_index(drop=True)
-        display_df.index = np.arange(1, len(display_df) + 1)
-        display_df.index.name = "Index"
-        st.dataframe(display_df, height=320)
->>>>>>> Stashed changes
         try:
             fig_f1 = px.bar(df_show, x="label", y="f1-score", title="Top-10 Categories by Support — F1 Scores")
             apply_brand_style(fig_f1)
@@ -751,17 +1015,10 @@ with tab6:
             pass
     elif os.path.exists(per_label_f1_path):
         per_label_df = pd.read_csv(per_label_f1_path)
-<<<<<<< Updated upstream
         per_label_df = per_label_df.reset_index(drop=True)
         per_label_df.index = per_label_df.index + 1
         per_label_df.index.name = "Index"
         st.dataframe(per_label_df, height=320)
-=======
-        display_df = per_label_df.reset_index(drop=True)
-        display_df.index = np.arange(1, len(display_df) + 1)
-        display_df.index.name = "Index"
-        st.dataframe(display_df, height=320)
->>>>>>> Stashed changes
         try:
             fig_f1 = px.bar(per_label_df, x="label", y="f1", title="Per-Label F1 Scores")
             apply_brand_style(fig_f1)
@@ -770,17 +1027,10 @@ with tab6:
             pass
     elif classes:
         placeholder_df = pd.DataFrame({"label": classes, "f1": [None] * len(classes)})
-<<<<<<< Updated upstream
         placeholder_df = placeholder_df.reset_index(drop=True)
         placeholder_df.index = placeholder_df.index + 1
         placeholder_df.index.name = "Index"
         st.dataframe(placeholder_df, height=320)
-=======
-        display_df = placeholder_df.reset_index(drop=True)
-        display_df.index = np.arange(1, len(display_df) + 1)
-        display_df.index.name = "Index"
-        st.dataframe(display_df, height=320)
->>>>>>> Stashed changes
 
     st.divider()
 
@@ -794,17 +1044,10 @@ with tab6:
             comp = df_default.merge(df_tuned, on="label", how="inner")
             comp["delta"] = comp["f1_tuned"] - comp["f1_default"]
             comp_sorted = comp.sort_values("delta", ascending=False)
-<<<<<<< Updated upstream
             comp_sorted = comp_sorted.reset_index(drop=True)
             comp_sorted.index = comp_sorted.index + 1
             comp_sorted.index.name = "Index"
             st.dataframe(comp_sorted, height=340)
-=======
-            display_df = comp_sorted.reset_index(drop=True)
-            display_df.index = np.arange(1, len(display_df) + 1)
-            display_df.index.name = "Index"
-            st.dataframe(display_df, height=340)
->>>>>>> Stashed changes
             # Chart: show improvement deltas (top 10)
             fig_delta = px.bar(comp_sorted.head(10), x="label", y="delta", title="Top-10 Improvements after Threshold Tuning")
             apply_brand_style(fig_delta)
@@ -869,7 +1112,7 @@ with tab6:
             if thresholds and isinstance(probs, np.ndarray):
                 pred_labels = [label for label, p in zip(classes, probs) if p >= float(thresholds.get(label, 0.5))]
                 st.markdown("Predicted categories (thresholded): " + ", ".join(pred_labels) if pred_labels else "None above threshold")
-        else:
+    else:
             st.info("Model not available or no input text provided.")
 
 # tab 6: Cluster Analysis (Keywords)
@@ -950,10 +1193,8 @@ with tab6:
                 
                 # Limit results
                 display_df = filtered_df.head(max_keywords)
-                
-                # Display the table
                 display_df = display_df.reset_index(drop=True)
-                display_df.index = np.arange(1, len(display_df) + 1)
+                display_df.index = display_df.index + 1
                 display_df.index.name = "Index"
                 st.dataframe(
                     display_df,
@@ -981,7 +1222,7 @@ with tab6:
                 # Left-align the numbers by treating them as strings for display
                 category_df['Total Keywords'] = category_df['Total Keywords'].astype(str)
                 category_df = category_df.reset_index(drop=True)
-                category_df.index = np.arange(1, len(category_df) + 1)
+                category_df.index = category_df.index + 1
                 category_df.index.name = "Index"
                 st.dataframe(category_df, height=300, use_container_width=True)
                 
@@ -992,6 +1233,7 @@ with tab6:
             st.error(f"Error reading cluster.txt file: {str(e)}")
     else:
         st.error("cluster.txt file not found. Please ensure the file exists in the Dashboard directory.")
+
 
 # tab 7: Spam Model
 with tab7:
@@ -1148,13 +1390,9 @@ with tab7:
         display_df.index = np.arange(1, len(display_df) + 1)
         display_df.index.name = "Index"
         st.dataframe(
-<<<<<<< Updated upstream
             df_filtered[display_cols].head(int(float(sample_size_spam))).reset_index(drop=True).rename(
                 lambda x: x + 1, axis="index"
             ),
-=======
-            display_df, 
->>>>>>> Stashed changes
             height=400
         )
         
