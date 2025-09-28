@@ -9,9 +9,151 @@ import json
 import numpy as np
 import re
 import stopwordsiso as stopwords_iso
+import base64
+
+def encode_logo_to_base64(logo_path: str) -> str:
+    """
+    Convert the L'Oréal logo file to base64 encoding for HTML embedding.
+    
+    Args:
+        logo_path (str): Path to the logo file
+        
+    Returns:
+        str: Base64 encoded string of the logo image
+        
+    Raises:
+        FileNotFoundError: If the logo file doesn't exist
+        Exception: If the file cannot be read or encoded
+    """
+    try:
+        # Check if file exists
+        if not os.path.exists(logo_path):
+            raise FileNotFoundError(f"Logo file not found at path: {logo_path}")
+        
+        # Check if it's actually a file (not a directory)
+        if not os.path.isfile(logo_path):
+            raise ValueError(f"Path exists but is not a file: {logo_path}")
+        
+        # Read and encode the file
+        with open(logo_path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+            
+        # Validate that we got a non-empty string
+        if not encoded_string:
+            raise ValueError("Failed to encode logo - empty result")
+            
+        return encoded_string
+        
+    except FileNotFoundError as e:
+        st.warning(f"Logo file not found: {e}")
+        raise
+    except PermissionError as e:
+        st.error(f"Permission denied reading logo file: {e}")
+        raise
+    except Exception as e:
+        st.error(f"Error encoding logo to base64: {e}")
+        raise
+
+def test_logo_encoding():
+    """
+    Test function to verify the logo encoding utility works correctly.
+    
+    Returns:
+        bool: True if test passes, False otherwise
+    """
+    try:
+        # Get the path to the logo file
+        logo_path = os.path.join(os.path.dirname(__file__), "loreal-logo.jpeg")
+        
+        # Test the encoding function
+        encoded_logo = encode_logo_to_base64(logo_path)
+        
+        # Validate the result
+        if not encoded_logo:
+            print("Test failed: Empty base64 string returned")
+            return False
+            
+        # Check if it's a valid base64 string (basic validation)
+        try:
+            base64.b64decode(encoded_logo)
+        except Exception as e:
+            print(f"Test failed: Invalid base64 string - {e}")
+            return False
+            
+        # Check minimum length (logo should produce substantial base64 string)
+        if len(encoded_logo) < 100:
+            print("Test failed: Base64 string too short, likely not a valid image")
+            return False
+            
+        print("Test passed: Logo encoding function works correctly")
+        print(f"Encoded string length: {len(encoded_logo)} characters")
+        print(f"First 50 characters: {encoded_logo[:50]}...")
+        return True
+        
+    except Exception as e:
+        print(f"Test failed with exception: {e}")
+        return False
+
+def create_header_html(logo_path="loreal-logo.jpeg", main_title="TrendSpotter", subtitle="AI Glow-Rithms"):
+    """
+    Generate the complete header HTML markup with L'Oréal branding.
+    
+    Args:
+        logo_path (str): Path to the L'Oréal logo file (default: "loreal-logo.jpeg")
+        main_title (str): Main dashboard title (default: "TrendSpotter")
+        subtitle (str): Team/subtitle text (default: "AI Glow-Rithms")
+        
+    Returns:
+        str: Complete HTML markup for the header section
+        
+    Raises:
+        Exception: If logo encoding fails or HTML generation encounters errors
+    """
+    try:
+        # Get the full path to the logo file
+        full_logo_path = os.path.join(os.path.dirname(__file__), logo_path)
+        
+        # Encode the logo to base64
+        try:
+            encoded_logo = encode_logo_to_base64(full_logo_path)
+        except Exception as e:
+            # Fallback: create header without logo if encoding fails
+            st.warning(f"Could not load logo: {e}. Displaying header without logo.")
+            encoded_logo = None
+        
+        # Build the header HTML structure
+        header_html = f"""
+        <div class="loreal-header">
+            {f'<img src="data:image/jpeg;base64,{encoded_logo}" class="loreal-logo" alt="L\'Oréal Logo">' if encoded_logo else ''}
+            <div class="loreal-title-section">
+                <h1>{main_title}</h1>
+                <p>{subtitle}</p>
+            </div>
+            <div class="loreal-spacer"></div>
+        </div>
+        """
+        
+        return header_html
+        
+    except Exception as e:
+        # Fallback: return basic header structure if anything fails
+        st.error(f"Error creating header HTML: {e}")
+        fallback_html = f"""
+        <div class="loreal-header">
+            <div class="loreal-title-section">
+                <h1>{main_title}</h1>
+                <p>{subtitle}</p>
+            </div>
+        </div>
+        """
+        return fallback_html
 
 # Page configuration
 st.set_page_config(page_title="AI Glow-rithms", layout="wide", initial_sidebar_state="expanded")
+
+# Add L'Oréal branded header at the top of the dashboard
+header_html = create_header_html()
+st.markdown(header_html, unsafe_allow_html=True)
 
 st.markdown("""
 <style>
@@ -85,9 +227,98 @@ st.markdown("""
         color: var(--loreal-black) !important;
     }
     
-    /* Force all subheaders to be black */
+    /* Force all subheaders to be black - Enhanced Rules */
     .main h1, .main h2, .main h3, .main h4, .main h5, .main h6 {
         color: var(--loreal-black) !important;
+    }
+    
+    /* Force Streamlit subheaders to be black */
+    .main .stSubheader, .main .stSubheader * {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Force any remaining header elements */
+    .main [data-testid="stSubheader"], .main [data-testid="stSubheader"] * {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Additional subheader overrides */
+    .main .element-container h3, .main .element-container h4, .main .element-container h5, .main .element-container h6 {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Force any text that might be styled as grey */
+    .main .stSubheader, .main .stMarkdown h3, .main .stMarkdown h4, .main .stMarkdown h5, .main .stMarkdown h6 {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Enhanced Streamlit subheader targeting */
+    div[data-testid="stSubheader"] h3,
+    div[data-testid="stSubheader"] h4,
+    div[data-testid="stSubheader"] h5,
+    div[data-testid="stSubheader"] h6,
+    div[data-testid="stSubheader"] * {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Target Streamlit's internal subheader classes */
+    .main .stSubheader > div,
+    .main .stSubheader > div > *,
+    .main .element-container .stSubheader,
+    .main .element-container .stSubheader * {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* Nuclear option for subheaders - target all possible Streamlit subheader selectors */
+    .main [class*="subheader"],
+    .main [class*="subheader"] *,
+    .main [class*="Subheader"],
+    .main [class*="Subheader"] * {
+        color: var(--loreal-black) !important;
+    }
+    
+    /* AGGRESSIVE SUBHEADER TARGETING - Force all possible subheader elements */
+    .stSubheader,
+    .stSubheader *,
+    [data-testid="stSubheader"],
+    [data-testid="stSubheader"] *,
+    .element-container .stSubheader,
+    .element-container .stSubheader *,
+    .stMarkdown .stSubheader,
+    .stMarkdown .stSubheader *,
+    .block-container .stSubheader,
+    .block-container .stSubheader * {
+        color: #000000 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Target specific Streamlit subheader DOM structure */
+    div[data-testid="element-container"] div[data-testid="stSubheader"],
+    div[data-testid="element-container"] div[data-testid="stSubheader"] *,
+    div[data-testid="element-container"] .stSubheader,
+    div[data-testid="element-container"] .stSubheader * {
+        color: #000000 !important;
+    }
+    
+    /* Force subheader text content specifically */
+    .stSubheader h3,
+    .stSubheader h4,
+    .stSubheader h5,
+    .stSubheader h6,
+    [data-testid="stSubheader"] h3,
+    [data-testid="stSubheader"] h4,
+    [data-testid="stSubheader"] h5,
+    [data-testid="stSubheader"] h6 {
+        color: #000000 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Ultimate nuclear option - override any grey colors */
+    .main *[style*="color: rgb(49, 51, 63)"],
+    .main *[style*="color: #31333f"],
+    .main *[style*="color: grey"],
+    .main *[style*="color: gray"] {
+        color: #000000 !important;
     }
     
     /* Override Streamlit's default text colors */
@@ -278,6 +509,143 @@ st.markdown("""
         border: 1px solid var(--loreal-light-grey) !important;
         border-radius: 8px !important;
     }
+    
+    /* COMPREHENSIVE TABLE STYLING - White background, black text */
+    
+    /* Target all Streamlit dataframes and tables */
+    .stDataFrame,
+    .stDataFrame *,
+    [data-testid="stDataFrame"],
+    [data-testid="stDataFrame"] *,
+    .dataframe,
+    .dataframe *,
+    table,
+    table * {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+    }
+    
+    /* Table headers */
+    .stDataFrame thead,
+    .stDataFrame thead *,
+    .stDataFrame th,
+    .stDataFrame th *,
+    [data-testid="stDataFrame"] thead,
+    [data-testid="stDataFrame"] thead *,
+    [data-testid="stDataFrame"] th,
+    [data-testid="stDataFrame"] th *,
+    table thead,
+    table thead *,
+    table th,
+    table th * {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border: 1px solid #cccccc !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Table body and cells */
+    .stDataFrame tbody,
+    .stDataFrame tbody *,
+    .stDataFrame td,
+    .stDataFrame td *,
+    [data-testid="stDataFrame"] tbody,
+    [data-testid="stDataFrame"] tbody *,
+    [data-testid="stDataFrame"] td,
+    [data-testid="stDataFrame"] td *,
+    table tbody,
+    table tbody *,
+    table td,
+    table td * {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border: 1px solid #cccccc !important;
+    }
+    
+    /* Table rows */
+    .stDataFrame tr,
+    .stDataFrame tr *,
+    [data-testid="stDataFrame"] tr,
+    [data-testid="stDataFrame"] tr *,
+    table tr,
+    table tr * {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+    }
+    
+    /* Hover states - light gray background but keep black text */
+    .stDataFrame tr:hover,
+    .stDataFrame tr:hover *,
+    [data-testid="stDataFrame"] tr:hover,
+    [data-testid="stDataFrame"] tr:hover *,
+    table tr:hover,
+    table tr:hover * {
+        background-color: #f5f5f5 !important;
+        color: #000000 !important;
+    }
+    
+    /* Index column styling */
+    .stDataFrame .index_name,
+    .stDataFrame .index_name *,
+    [data-testid="stDataFrame"] .index_name,
+    [data-testid="stDataFrame"] .index_name * {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Streamlit specific table elements */
+    div[data-testid="stDataFrame"] div,
+    div[data-testid="stDataFrame"] div *,
+    .element-container .stDataFrame,
+    .element-container .stDataFrame *,
+    .block-container .stDataFrame,
+    .block-container .stDataFrame * {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+    }
+    
+    /* Override any dark theme table styles */
+    .stDataFrame [class*="dark"],
+    .stDataFrame [class*="Dark"],
+    [data-testid="stDataFrame"] [class*="dark"],
+    [data-testid="stDataFrame"] [class*="Dark"] {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+    }
+    
+    /* Force table container backgrounds */
+    .stDataFrame > div,
+    .stDataFrame > div > div,
+    [data-testid="stDataFrame"] > div,
+    [data-testid="stDataFrame"] > div > div {
+        background-color: #FFFFFF !important;
+    }
+    
+    /* Pandas DataFrame specific styling */
+    .dataframe thead tr th,
+    .dataframe tbody tr td,
+    .dataframe tbody tr th {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border: 1px solid #cccccc !important;
+        text-align: left !important;
+    }
+    
+    /* Alternative row styling (zebra striping) */
+    .stDataFrame tbody tr:nth-child(even),
+    [data-testid="stDataFrame"] tbody tr:nth-child(even),
+    table tbody tr:nth-child(even) {
+        background-color: #f9f9f9 !important;
+        color: #000000 !important;
+    }
+    
+    .stDataFrame tbody tr:nth-child(odd),
+    [data-testid="stDataFrame"] tbody tr:nth-child(odd),
+    table tbody tr:nth-child(odd) {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+    }
 
     /* Word cloud / custom containers */
     .wordcloud-container {
@@ -317,6 +685,127 @@ st.markdown("""
         background-color: #f8f9fa !important;
         border: 1px solid var(--loreal-light-grey) !important;
         border-radius: 6px !important;
+    }
+
+    /* L'Oréal Header Styling */
+    .loreal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        background-color: var(--loreal-white);
+        border-bottom: 2px solid var(--loreal-red);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .loreal-logo {
+        height: 50px;
+        width: auto;
+        max-width: 150px;
+        object-fit: contain;
+    }
+
+    .loreal-title-section {
+        text-align: center;
+        flex-grow: 1;
+        padding: 0 1rem;
+    }
+
+    .loreal-title-section h1 {
+        color: var(--loreal-black) !important;
+        font-family: Arial, sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0 0 0.25rem 0;
+        line-height: 1.2;
+    }
+
+    .loreal-title-section p {
+        color: var(--loreal-grey) !important;
+        font-family: Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .loreal-spacer {
+        width: 150px;
+        flex-shrink: 0;
+    }
+
+    /* Responsive design for header */
+    @media (max-width: 1024px) {
+        .loreal-header {
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .loreal-title-section h1 {
+            font-size: 1.8rem;
+        }
+        
+        .loreal-title-section p {
+            font-size: 0.9rem;
+        }
+        
+        .loreal-logo {
+            height: 40px;
+        }
+        
+        .loreal-spacer {
+            width: 100px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .loreal-header {
+            flex-direction: column;
+            text-align: center;
+            padding: 1rem;
+            gap: 0.75rem;
+        }
+        
+        .loreal-title-section {
+            padding: 0;
+        }
+        
+        .loreal-title-section h1 {
+            font-size: 1.6rem;
+        }
+        
+        .loreal-title-section p {
+            font-size: 0.85rem;
+        }
+        
+        .loreal-logo {
+            height: 35px;
+        }
+        
+        .loreal-spacer {
+            display: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .loreal-header {
+            padding: 0.75rem;
+        }
+        
+        .loreal-title-section h1 {
+            font-size: 1.4rem;
+        }
+        
+        .loreal-title-section p {
+            font-size: 0.8rem;
+        }
+        
+        .loreal-logo {
+            height: 30px;
+        }
     }
 
         /* 🔹 Force ALL metric labels (top text) to black */
@@ -441,7 +930,7 @@ with tab1:
     # Metrics container again (mirroring size of others)
     with col1:
         with st.container(border=True):
-            st.subheader("Key Metrics ")
+            st.title("Key Metrics ")
             st.metric("Total Comments", len(filtered_df))
             if "quality_score" in filtered_df.columns:
                 st.metric("Avg Quality", f"{filtered_df['quality_score'].mean():.2f}")
@@ -480,13 +969,13 @@ with tab1:
     hist_col1, hist_col2 = st.columns(2)
     with hist_col1:
         if "quality_score" in filtered_df.columns:
-            st.subheader("Quality Score Distribution (Histogram)")
+            st.title("Quality Score Distribution (Histogram)")
             fig_quality = px.histogram(filtered_df, x="quality_score", nbins=30, title="Quality Score Distribution")
             apply_brand_style(fig_quality)
             st.plotly_chart(fig_quality, use_container_width=True, key="overview-quality-hist")
     with hist_col2:
         if "relevance_score" in filtered_df.columns:
-            st.subheader("Relevance Score Distribution (Histogram)")
+            st.title("Relevance Score Distribution (Histogram)")
             fig_relevance = px.histogram(filtered_df, x="relevance_score", nbins=30, title="Relevance Score Distribution")
             apply_brand_style(fig_relevance)
             st.plotly_chart(fig_relevance, use_container_width=True, key="overview-relevance-hist")
@@ -494,7 +983,7 @@ with tab1:
     # Top 10 Clusters/Categories Bar Chart
     for col in ["new_cluster", "cluster", "predicted_category"]:
         if col in filtered_df.columns:
-            st.subheader(f"Top 10 {col} Categories")
+            st.title(f"Top 10 {col} Categories")
             cat_counts = filtered_df[col].value_counts().head(10).reset_index()
             cat_counts.columns = [col, "count"]
             fig_cat = px.bar(cat_counts, x=col, y="count", title=f"Top 10 {col} Categories")
@@ -503,7 +992,7 @@ with tab1:
 
 with tab2:
     if "sentiment" in filtered_df.columns:
-        st.subheader("Sentiment Distribution (Counts)")
+        st.title("Sentiment Distribution (Counts)")
         sent_series = filtered_df["sentiment"].value_counts().reset_index()
         sent_series.columns = ["sentiment", "count"]
         fig6 = px.bar(sent_series, x="sentiment", y="count", title="Sentiment Counts")
@@ -512,7 +1001,7 @@ with tab2:
 
         # Sentiment counts in filtered data
         if "textOriginal" in filtered_df.columns:
-            st.subheader("Comments by Sentiment")
+            st.title("Comments by Sentiment")
             col1, col2 = st.columns([2, 1])
             with col1:
                 sentiment_filter_table = st.multiselect(
@@ -625,11 +1114,11 @@ with tab2:
 
 # tab 3: Trends
 with tab3:
-    st.subheader("Trends & Distributions")
+    st.title("Trends & Distributions")
     dist_col1, dist_col2 = st.columns(2)
     with dist_col1:
         if "quality_score" in filtered_df.columns:
-            st.subheader("Quality Score Distribution")
+            st.title("Quality Score Distribution")
             try:
                 counts, bin_edges = np.histogram(filtered_df["quality_score"].dropna().astype(float), bins=50)
                 bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
@@ -643,7 +1132,7 @@ with tab3:
                 pass
     with dist_col2:
         if "relevance_score" in filtered_df.columns:
-            st.subheader("Relevance Score Distribution")
+            st.title("Relevance Score Distribution")
             try:
                 counts, bin_edges = np.histogram(filtered_df["relevance_score"].dropna().astype(float), bins=50)
                 bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
@@ -658,7 +1147,7 @@ with tab3:
     
     for col in ["new_cluster", "cluster", "predicted_category"]:
         if col in filtered_df.columns and "quality_score" in filtered_df.columns and "relevance_score" in filtered_df.columns:
-            st.subheader(f"Average Quality & Relevance Score by {col}")
+            st.title(f"Average Quality & Relevance Score by {col}")
             cat_col1, cat_col2 = st.columns(2)
             with cat_col1:
                 avg_quality = filtered_df.groupby(col)["quality_score"].mean().reset_index()
@@ -685,7 +1174,7 @@ with tab3:
 
     for col in ["new_cluster", "cluster", "predicted_category"]:
         if col in filtered_df.columns:
-            st.subheader(f"Category Distribution — {col}")
+            st.title(f"Category Distribution — {col}")
             cat_series = filtered_df[col].value_counts().reset_index()
             cat_series.columns = [col, "count"]
             fig7 = px.bar(cat_series.head(10), x=col, y="count", title=f"Top 10 {col} categories")
@@ -694,7 +1183,7 @@ with tab3:
 
 # tab 4: WordCloud
 with tab4:
-    st.subheader("Word Cloud of Comments")
+    st.title("Word Cloud of Comments")
 
     # Candidate text columns
     object_cols = [c for c in df.columns if df[c].dtype == "object"]
@@ -774,7 +1263,7 @@ with tab4:
                     uncategorized.append((word, count))
 
             # Display categorized keywords
-            st.subheader("Keywords by Category")
+            st.title("Keywords by Category")
             
             # Show category tabs
             if categorized_keywords:
@@ -836,7 +1325,7 @@ with tab4:
                         st.write("No uncategorized keywords found.")
 
             # Show top keywords (original view)
-            st.subheader("All Keywords (Top 50)")
+            st.title("All Keywords (Top 50)")
             top_df = pd.DataFrame(freq.most_common(50), columns=["keyword", "count"])
             top_df = top_df.reset_index(drop=True)
             top_df.index = top_df.index + 1
@@ -874,7 +1363,7 @@ with tab4:
 
 # tab 5: Classification Model (BERT multi-label)
 with tab5:
-    st.subheader("Classification Model")
+    st.title("Classification Model")
     st.markdown("This module classifies user comments into multiple topic categories using a BERT multi-label model.")
 
     # Paths
@@ -1117,7 +1606,7 @@ with tab5:
 
 # tab 6: Cluster Analysis (Keywords)
 with tab6:
-    st.subheader("Cluster Analysis — Keywords")
+    st.title("Cluster Analysis — Keywords")
     st.markdown("Analysis of keywords extracted from comments and their assigned categories.")
     
     # Load cluster.txt file
@@ -1203,7 +1692,7 @@ with tab6:
                 )
                 
                 # Display summary statistics
-                st.subheader("Summary Statistics")
+                st.title("Summary Statistics")
                 col1, col2, col3 = st.columns(3)
                 with col1:
                     st.metric("Total Keywords", len(result_df))
@@ -1213,7 +1702,7 @@ with tab6:
                     st.metric("Most Frequent Keyword", f"{result_df.iloc[0]['Keyword']} ({result_df.iloc[0]['Count']})")
                 
                 # Show top categories by keyword count
-                st.subheader("Top Categories by Keyword Count")
+                st.title("Top Categories by Keyword Count")
                 category_counts = result_df.groupby('Category')['Count'].sum().sort_values(ascending=False).head(10)
                 category_df = pd.DataFrame({
                     'Category': category_counts.index,
@@ -1237,7 +1726,7 @@ with tab6:
 
 # tab 7: Spam Model
 with tab7:
-    st.subheader("Spam Detection & Comment Relevancy Analysis")
+    st.title("Spam Detection & Comment Relevancy Analysis")
     st.markdown("This module analyzes spam comments per video category and evaluates comment relevancy with video content.")
 
     # Check for required columns
@@ -1252,7 +1741,7 @@ with tab7:
         st.stop()
 
     # Overall spam distribution
-    st.subheader("Overall Spam Distribution")
+    st.title("Overall Spam Distribution")
 
     col1, col2 = st.columns([2, 1])
     with col1:
@@ -1278,7 +1767,7 @@ with tab7:
 
     # Spam analysis per video category
     if has_video_category:
-        st.subheader("Spam Analysis by Video Category")
+        st.title("Spam Analysis by Video Category")
         
         # Find the video category column
         video_cat_col = None
@@ -1314,7 +1803,7 @@ with tab7:
     
     # Spam analysis by topic category
     if "topicCategories_clean" in df.columns:
-        st.subheader("Spam Rate Treemap by Topic Category")
+        st.title("Spam Rate Treemap by Topic Category")
         spam_topic_df = df.copy()
         spam_topic_df["is_spam"] = spam_topic_df["is_spam"].astype(str).str.lower().replace({"yes": "Spam", "no": "Non-Spam"})
         spam_topic_df["topicCategories_clean"] = spam_topic_df["topicCategories_clean"].apply(
@@ -1339,7 +1828,7 @@ with tab7:
 
     # Spam comments table with context
     if has_text:
-        st.subheader("Spam Comments Analysis")
+        st.title("Spam Comments Analysis")
         
         # Filter controls
         col1, col2, col3 = st.columns([2, 1, 1])
