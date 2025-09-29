@@ -1,2 +1,8 @@
-AI_Model/CommentCategory/saved_model/model.safetensors
-clustered_comments_reassigned.csv
+AI_Model/CommentCategory/saved_model/
+AI_Model/CommentCategory/saved_model_backup/
+AI_Model/CommentCategory/saved_model/classification_report_with_thresholds.csv
+AI_Model/CommentCategory/saved_model/classification_report.csv
+AI_Model/CommentCategory/comments_evaluated.csv
+AI_Model/SentimentAnalysis/comments_with_sentiment.csv
+AI_Model/Clustering Model For Comment Sub Category/clustered_comments_reassigned.csv
+Dashboard/tab_sentiment_backup.py
