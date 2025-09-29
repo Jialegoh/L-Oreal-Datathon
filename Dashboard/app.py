@@ -687,6 +687,353 @@ st.markdown("""
         border-radius: 6px !important;
     }
 
+    /* Metric card styling */
+    .metric-card {
+        border: 2px solid black !important;
+        border-radius: 12px !important;
+        padding: 20px 15px !important;
+        margin: 8px 0 !important;
+        background-color: white !important;
+        text-align: center !important;
+    }
+
+    /* Force all table text to be black */
+    .main table, .main table *, .main table td, .main table th {
+        color: var(--loreal-black) !important;
+    }
+
+    /* DataFrame styling */
+    .main [data-testid="stDataFrame"] table,
+    .main [data-testid="stDataFrame"] table *,
+    .main [data-testid="stDataFrame"] table td,
+    .main [data-testid="stDataFrame"] table th {
+        color: var(--loreal-black) !important;
+        background-color: white !important;
+    }
+
+    /* Force all data in tables to be black */
+    .main .dataframe, .main .dataframe * {
+        color: var(--loreal-black) !important;
+    }
+
+    /* Table headers and cells */
+    .main thead, .main tbody, .main tr, .main td, .main th {
+        color: var(--loreal-black) !important;
+        background-color: white !important;
+    }
+
+    /* COMPREHENSIVE TABLE TEXT OVERRIDE - Force ALL text to be black */
+    .main [data-testid="stDataFrame"] * {
+        color: var(--loreal-black) !important;
+        background-color: white !important;
+    }
+
+    .main .stDataFrame,
+    .main .stDataFrame *,
+    .main .stDataFrame table,
+    .main .stDataFrame table *,
+    .main .stDataFrame table td,
+    .main .stDataFrame table th,
+    .main .stDataFrame table tr,
+    .main .stDataFrame table tbody,
+    .main .stDataFrame table thead {
+        color: var(--loreal-black) !important;
+        background-color: white !important;
+    }
+
+    /* Force all text elements in tables to be black */
+    .main table span, .main table div, .main table p, .main table strong, .main table em {
+        color: var(--loreal-black) !important;
+    }
+
+    /* Nuclear option for all table-related elements */
+    .main [data-testid="stDataFrame"] *,
+    .main .dataframe *,
+    .main table * {
+        color: var(--loreal-black) !important;
+    }
+
+    /* Additional overrides for Streamlit dataframe components */
+    .main [data-testid="stDataFrame"] div[data-testid="stDataFrame"],
+    .main [data-testid="stDataFrame"] div[data-testid="stDataFrame"] * {
+        color: var(--loreal-black) !important;
+    }
+
+    /* PROFESSIONAL L'ORÉAL BRANDED TABLE STYLING */
+    .main .stDataFrame {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        border: 1px solid #E5E7EB !important;
+    }
+
+    /* Professional header styling */
+    .main .stDataFrame th {
+        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
+        color: white !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 16px 12px !important;
+        border: none !important;
+        text-align: left !important;
+    }
+
+    /* Professional cell styling */
+    .main .stDataFrame td {
+        color: #111827 !important;
+        background-color: white !important;
+        padding: 14px 12px !important;
+        border-bottom: 1px solid #F3F4F6 !important;
+        border-left: none !important;
+        border-right: none !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    /* Alternating row colors for better readability */
+    .main .stDataFrame tbody tr:nth-child(even) td {
+        background-color: #F9FAFB !important;
+    }
+
+    .main .stDataFrame tbody tr:hover td {
+        background-color: #FEF2F2 !important;
+        transition: background-color 0.2s ease !important;
+    }
+
+    /* Professional table styling for all tables */
+    .main table {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        border: 1px solid #E5E7EB !important;
+    }
+
+    .main table th {
+        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
+        color: white !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 16px 12px !important;
+        border: none !important;
+        text-align: left !important;
+    }
+
+    .main table td {
+        color: #111827 !important;
+        background-color: white !important;
+        padding: 14px 12px !important;
+        border-bottom: 1px solid #F3F4F6 !important;
+        border-left: none !important;
+        border-right: none !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .main table tbody tr:nth-child(even) td {
+        background-color: #F9FAFB !important;
+    }
+
+    .main table tbody tr:hover td {
+        background-color: #FEF2F2 !important;
+        transition: background-color 0.2s ease !important;
+    }
+
+    /* Additional professional styling for Streamlit dataframes */
+    .main [data-testid="stDataFrame"] {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .main [data-testid="stDataFrame"] th {
+        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
+        color: white !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 16px 12px !important;
+        border: none !important;
+    }
+
+    .main [data-testid="stDataFrame"] td {
+        color: #111827 !important;
+        background-color: white !important;
+        padding: 14px 12px !important;
+        border-bottom: 1px solid #F3F4F6 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    /* Professional scrollbar styling */
+    .main .stDataFrame::-webkit-scrollbar {
+        height: 8px !important;
+    }
+
+    .main .stDataFrame::-webkit-scrollbar-track {
+        background: #F3F4F6 !important;
+        border-radius: 4px !important;
+    }
+
+    .main .stDataFrame::-webkit-scrollbar-thumb {
+        background: #ED1B2E !important;
+        border-radius: 4px !important;
+    }
+
+    .main .stDataFrame::-webkit-scrollbar-thumb:hover {
+        background: #C41E3A !important;
+    }
+
+    /* COMPREHENSIVE TABLES STYLING FOR ALL TABS */
+    /* Ensure ALL table types across ALL tabs use L'Oréal branding */
+    
+    /* Keyword tables styling */
+    .main .dataframe,
+    .main .dataframe table,
+    .main .dataframe th,
+    .main .dataframe td {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    }
+    
+    .main .dataframe th {
+        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
+        color: white !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 16px 12px !important;
+        border: none !important;
+    }
+    
+    .main .dataframe td {
+        color: #111827 !important;
+        background-color: white !important;
+        padding: 14px 12px !important;
+        border-bottom: 1px solid #F3F4F6 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+    
+    .main .dataframe tbody tr:nth-child(even) td {
+        background-color: #F9FAFB !important;
+    }
+    
+    .main .dataframe tbody tr:hover td {
+        background-color: #FEF2F2 !important;
+        transition: background-color 0.2s ease !important;
+    }
+
+    /* Category analysis tables */
+    .main [data-testid="stDataFrame"] table,
+    .main [data-testid="stDataFrame"] table th,
+    .main [data-testid="stDataFrame"] table td {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    /* Classification model tables */
+    .main .element-container table,
+    .main .element-container table th,
+    .main .element-container table td {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .main .element-container table th {
+        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
+        color: white !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 16px 12px !important;
+        border: none !important;
+    }
+
+    .main .element-container table td {
+        color: #111827 !important;
+        background-color: white !important;
+        padding: 14px 12px !important;
+        border-bottom: 1px solid #F3F4F6 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    /* Spam detection tables */
+    .main .block-container table,
+    .main .block-container table th,
+    .main .block-container table td {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    /* Universal table styling for any remaining tables */
+    .main div table,
+    .main div table th,
+    .main div table td {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .main div table th {
+        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
+        color: white !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 16px 12px !important;
+        border: none !important;
+    }
+
+    .main div table td {
+        color: #111827 !important;
+        background-color: white !important;
+        padding: 14px 12px !important;
+        border-bottom: 1px solid #F3F4F6 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .main div table tbody tr:nth-child(even) td {
+        background-color: #F9FAFB !important;
+    }
+
+    .main div table tbody tr:hover td {
+        background-color: #FEF2F2 !important;
+        transition: background-color 0.2s ease !important;
+    }
+
+    /* Number input styling */
+    .main .stNumberInput label {
+        color: var(--loreal-black) !important;
+        font-weight: 600 !important;
+    }
+
+    .main .stNumberInput input {
+        background-color: white !important;
+        color: var(--loreal-black) !important;
+        border: 1px solid var(--loreal-light-grey) !important;
+    }
+
+    .main .stNumberInput input:focus {
+        background-color: white !important;
+        color: var(--loreal-black) !important;
+        border: 2px solid var(--loreal-red) !important;
+        box-shadow: 0 0 0 1px var(--loreal-red) !important;
+    }
+
     /* L'Oréal Header Styling */
     .loreal-header {
         display: flex;
@@ -924,21 +1271,301 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Overview", "Sentiment", "Tr
 
 # tab 1: Overview
 with tab1:
-    # ---- Row 2: Three Equal Columns ----
+    # ---- TITLE ----
+    st.markdown('<h3 style="color:#000;">Key Metrics</h1>', unsafe_allow_html=True)
+
+    # ---- THREE CARDS ----
     col1, col2, col3 = st.columns(3)
 
-    # Metrics container again (mirroring size of others)
     with col1:
-        with st.container(border=True):
-            st.title("Key Metrics ")
-            st.metric("Total Comments", len(filtered_df))
-            if "quality_score" in filtered_df.columns:
-                st.metric("Avg Quality", f"{filtered_df['quality_score'].mean():.2f}")
-            if "relevance_score" in filtered_df.columns:
-                st.metric("Avg Relevance", f"{filtered_df['relevance_score'].mean():.2f}")
+        st.markdown(
+            f"""
+            <div style="
+                background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+                border: 2px solid #E5E7EB;
+                border-radius: 16px;
+                padding: 24px 20px;
+                margin: 12px 0;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                text-align: center;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            ">
+                <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 4px;
+                    background: linear-gradient(90deg, #ED1B2E 0%, #FF6B7A 100%);
+                "></div>
+                <div style="
+                    margin-top: 8px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                ">
+                    <div style="
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #6B7280;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        margin-bottom: 8px;
+                    ">Total Comments</div>
+                    <div style="
+                        font-size: 36px;
+                        font-weight: 700;
+                        color: #111827;
+                        line-height: 1;
+                        margin-bottom: 4px;
+                    ">{len(filtered_df):,}</div>
+                    <div style="
+                        font-size: 12px;
+                        color: #9CA3AF;
+                        font-weight: 500;
+                    ">Active Records</div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with col2:
+        if "quality_score" in filtered_df.columns:
+            quality_value = filtered_df['quality_score'].mean()
+            quality_color = "#10B981" if quality_value >= 0.7 else "#F59E0B" if quality_value >= 0.5 else "#EF4444"
+            quality_label = "Excellent" if quality_value >= 0.7 else "Good" if quality_value >= 0.5 else "Needs Improvement"
+            
+            st.markdown(
+                f"""
+                <div style="
+                    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+                    border: 2px solid #E5E7EB;
+                    border-radius: 16px;
+                    padding: 24px 20px;
+                    margin: 12px 0;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                    text-align: center;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                ">
+                    <div style="
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        height: 4px;
+                        background: linear-gradient(90deg, {quality_color} 0%, {quality_color}80 100%);
+                    "></div>
+                    <div style="
+                        margin-top: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    ">
+                        <div style="
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #6B7280;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                            margin-bottom: 8px;
+                        ">Average Quality</div>
+                        <div style="
+                            font-size: 36px;
+                            font-weight: 700;
+                            color: #111827;
+                            line-height: 1;
+                            margin-bottom: 4px;
+                        ">{quality_value:.2f}</div>
+                        <div style="
+                            font-size: 12px;
+                            color: {quality_color};
+                            font-weight: 600;
+                            background: {quality_color}15;
+                            padding: 4px 12px;
+                            border-radius: 12px;
+                        ">{quality_label}</div>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                """
+                <div style="
+                    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+                    border: 2px solid #E5E7EB;
+                    border-radius: 16px;
+                    padding: 24px 20px;
+                    margin: 12px 0;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                    text-align: center;
+                    position: relative;
+                    overflow: hidden;
+                ">
+                    <div style="
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        height: 4px;
+                        background: linear-gradient(90deg, #9CA3AF 0%, #D1D5DB 100%);
+                    "></div>
+                    <div style="
+                        margin-top: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    ">
+                        <div style="
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #6B7280;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                            margin-bottom: 8px;
+                        ">Average Quality</div>
+                        <div style="
+                            font-size: 36px;
+                            font-weight: 700;
+                            color: #9CA3AF;
+                            line-height: 1;
+                            margin-bottom: 4px;
+                        ">N/A</div>
+                        <div style="
+                            font-size: 12px;
+                            color: #9CA3AF;
+                            font-weight: 500;
+                        ">No Data Available</div>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+    with col3:
+        if "relevance_score" in filtered_df.columns:
+            relevance_value = filtered_df['relevance_score'].mean()
+            relevance_color = "#10B981" if relevance_value >= 0.7 else "#F59E0B" if relevance_value >= 0.5 else "#EF4444"
+            relevance_label = "High" if relevance_value >= 0.7 else "Medium" if relevance_value >= 0.5 else "Low"
+            
+            st.markdown(
+                f"""
+                <div style="
+                    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+                    border: 2px solid #E5E7EB;
+                    border-radius: 16px;
+                    padding: 24px 20px;
+                    margin: 12px 0;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                    text-align: center;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                ">
+                    <div style="
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        height: 4px;
+                        background: linear-gradient(90deg, {relevance_color} 0%, {relevance_color}80 100%);
+                    "></div>
+                    <div style="
+                        margin-top: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    ">
+                        <div style="
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #6B7280;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                            margin-bottom: 8px;
+                        ">Average Relevance</div>
+                        <div style="
+                            font-size: 36px;
+                            font-weight: 700;
+                            color: #111827;
+                            line-height: 1;
+                            margin-bottom: 4px;
+                        ">{relevance_value:.2f}</div>
+                        <div style="
+                            font-size: 12px;
+                            color: {relevance_color};
+                            font-weight: 600;
+                            background: {relevance_color}15;
+                            padding: 4px 12px;
+                            border-radius: 12px;
+                        ">{relevance_label} Relevance</div>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                """
+                <div style="
+                    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+                    border: 2px solid #E5E7EB;
+                    border-radius: 16px;
+                    padding: 24px 20px;
+                    margin: 12px 0;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                    text-align: center;
+                    position: relative;
+                    overflow: hidden;
+                ">
+                    <div style="
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        height: 4px;
+                        background: linear-gradient(90deg, #9CA3AF 0%, #D1D5DB 100%);
+                    "></div>
+                    <div style="
+                        margin-top: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    ">
+                        <div style="
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #6B7280;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                            margin-bottom: 8px;
+                        ">Average Relevance</div>
+                        <div style="
+                            font-size: 36px;
+                            font-weight: 700;
+                            color: #9CA3AF;
+                            line-height: 1;
+                            margin-bottom: 4px;
+                        ">N/A</div>
+                        <div style="
+                            font-size: 12px;
+                            color: #9CA3AF;
+                            font-weight: 500;
+                        ">No Data Available</div>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
     # Sentiment pie chart
-    with col2:
+    with col1:
         if "sentiment" in filtered_df.columns:
             with st.container(border=True):
                 sent_counts = filtered_df["sentiment"].value_counts().reset_index()
@@ -948,7 +1575,7 @@ with tab1:
                 st.plotly_chart(fig_sent, use_container_width=True, key="overview-sentiment-pie")
 
     # Spam pie chart
-    with col3:
+    with col2:
         if "is_spam" in filtered_df.columns:
             with st.container(border=True):
                 spam_counts = (
@@ -964,18 +1591,20 @@ with tab1:
                 apply_brand_style(fig_spam)
                 st.plotly_chart(fig_spam, use_container_width=True, key="overview-spam-pie")
 
-    st.divider()
+    st.divider()  
+
+
     # Quality Score and Relevance Score Histograms in the same row
     hist_col1, hist_col2 = st.columns(2)
     with hist_col1:
         if "quality_score" in filtered_df.columns:
-            st.title("Quality Score Distribution (Histogram)")
+            st.markdown('<h3 style="color:#000;">Quality Score Distribution (Histogram)</h3>', unsafe_allow_html=True)
             fig_quality = px.histogram(filtered_df, x="quality_score", nbins=30, title="Quality Score Distribution")
             apply_brand_style(fig_quality)
             st.plotly_chart(fig_quality, use_container_width=True, key="overview-quality-hist")
     with hist_col2:
         if "relevance_score" in filtered_df.columns:
-            st.title("Relevance Score Distribution (Histogram)")
+            st.markdown('<h3 style="color:#000;">Relevance Score Distribution (Histogram)</h3>', unsafe_allow_html=True)
             fig_relevance = px.histogram(filtered_df, x="relevance_score", nbins=30, title="Relevance Score Distribution")
             apply_brand_style(fig_relevance)
             st.plotly_chart(fig_relevance, use_container_width=True, key="overview-relevance-hist")
@@ -992,7 +1621,7 @@ with tab1:
 
 with tab2:
     if "sentiment" in filtered_df.columns:
-        st.title("Sentiment Distribution (Counts)")
+        st.markdown('<h3 style="color:#000;">Sentiment Distribution</h3>', unsafe_allow_html=True)
         sent_series = filtered_df["sentiment"].value_counts().reset_index()
         sent_series.columns = ["sentiment", "count"]
         fig6 = px.bar(sent_series, x="sentiment", y="count", title="Sentiment Counts")
@@ -1114,7 +1743,7 @@ with tab2:
 
 # tab 3: Trends
 with tab3:
-    st.title("Trends & Distributions")
+    st.markdown('<h3 style="color:#000;">Trends & Distributions</h3>', unsafe_allow_html=True)
     dist_col1, dist_col2 = st.columns(2)
     with dist_col1:
         if "quality_score" in filtered_df.columns:
@@ -1147,7 +1776,7 @@ with tab3:
     
     for col in ["new_cluster", "cluster", "predicted_category"]:
         if col in filtered_df.columns and "quality_score" in filtered_df.columns and "relevance_score" in filtered_df.columns:
-            st.title(f"Average Quality & Relevance Score by {col}")
+            st.markdown('<h3 style="color:#000;">Average Quality & Relevance Score by Clusters</h3>', unsafe_allow_html=True)
             cat_col1, cat_col2 = st.columns(2)
             with cat_col1:
                 avg_quality = filtered_df.groupby(col)["quality_score"].mean().reset_index()
@@ -1183,7 +1812,7 @@ with tab3:
 
 # tab 4: WordCloud
 with tab4:
-    st.title("Word Cloud of Comments")
+    st.markdown('<h3 style="color:#000;">Word Cloud of Comments</h3>', unsafe_allow_html=True)
 
     # Candidate text columns
     object_cols = [c for c in df.columns if df[c].dtype == "object"]
@@ -1263,7 +1892,7 @@ with tab4:
                     uncategorized.append((word, count))
 
             # Display categorized keywords
-            st.title("Keywords by Category")
+            st.markdown('<h3 style="color:#000;">Keywords by Category</h3>', unsafe_allow_html=True)
             
             # Show category tabs
             if categorized_keywords:
@@ -1325,7 +1954,7 @@ with tab4:
                         st.write("No uncategorized keywords found.")
 
             # Show top keywords (original view)
-            st.title("All Keywords (Top 50)")
+            st.markdown('<h3 style="color:#000;">All Keywords (Top 50)</h3>', unsafe_allow_html=True)
             top_df = pd.DataFrame(freq.most_common(50), columns=["keyword", "count"])
             top_df = top_df.reset_index(drop=True)
             top_df.index = top_df.index + 1
@@ -1363,7 +1992,7 @@ with tab4:
 
 # tab 5: Classification Model (BERT multi-label)
 with tab5:
-    st.title("Classification Model")
+    st.markdown('<h3 style="color:#000;">Classification Model</h3>', unsafe_allow_html=True)
     st.markdown("This module classifies user comments into multiple topic categories using a BERT multi-label model.")
 
     # Paths
@@ -1604,10 +2233,45 @@ with tab5:
     else:
             st.info("Model not available or no input text provided.")
 
-# tab 6: Cluster Analysis (Keywords)
+# tab 6: Cluster Analysis (Keywords) - Professional L'Oréal Layout
 with tab6:
-    st.title("Cluster Analysis — Keywords")
-    st.markdown("Analysis of keywords extracted from comments and their assigned categories.")
+    # Professional Header Section
+    st.markdown("""
+    <div style="
+        background: linear-gradient(135deg, #F8F9FA 0%, #FFFFFF 100%);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid #ED1B2E;
+    ">
+        <h2 style="
+            color: #111827;
+            margin: 0 0 8px 0;
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        ">
+            <span style="
+                background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 600;
+            ">📊</span>
+            Cluster Analysis — Keywords
+        </h2>
+        <p style="
+            color: #6B7280;
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+        ">Advanced analysis of keywords extracted from comments and their assigned categories using AI clustering techniques.</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Load cluster.txt file
     cluster_file_path = os.path.join(os.path.dirname(__file__), "cluster.txt")
@@ -1663,57 +2327,276 @@ with tab6:
                 # Sort by count (descending)
                 result_df = result_df.sort_values('Count', ascending=False)
                 
-                # Display controls
-                col1, col2 = st.columns([2, 1])
-                with col1:
+                # Professional Summary Metrics Section
+                st.markdown("""
+                <div style="
+                    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+                    border-radius: 16px;
+                    padding: 20px;
+                    margin-bottom: 24px;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                    border: 1px solid #E5E7EB;
+                ">
+                    <h3 style="
+                        color: #111827;
+                        margin: 0 0 16px 0;
+                        font-size: 20px;
+                        font-weight: 600;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    ">
+                        <span style="
+                            background: #ED1B2E;
+                            color: white;
+                            padding: 4px 8px;
+                            border-radius: 6px;
+                            font-size: 12px;
+                        ">📈</span>
+                        Analysis Overview
+                    </h3>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # Professional Metrics Cards
+                metric_col1, metric_col2, metric_col3 = st.columns(3)
+                
+                with metric_col1:
+                    st.markdown(f"""
+                    <div style="
+                        background: linear-gradient(135deg, #FFFFFF 0%, #FEF2F2 100%);
+                        border: 2px solid #ED1B2E;
+                        border-radius: 12px;
+                        padding: 20px;
+                        text-align: center;
+                        box-shadow: 0 4px 12px rgba(237, 27, 46, 0.1);
+                    ">
+                        <div style="
+                            font-size: 32px;
+                            font-weight: 700;
+                            color: #ED1B2E;
+                            margin-bottom: 8px;
+                        ">{len(result_df):,}</div>
+                        <div style="
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #111827;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                        ">Total Keywords</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                with metric_col2:
+                    st.markdown(f"""
+                    <div style="
+                        background: linear-gradient(135deg, #FFFFFF 0%, #F0F9FF 100%);
+                        border: 2px solid #3B82F6;
+                        border-radius: 12px;
+                        padding: 20px;
+                        text-align: center;
+                        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+                    ">
+                        <div style="
+                            font-size: 32px;
+                            font-weight: 700;
+                            color: #3B82F6;
+                            margin-bottom: 8px;
+                        ">{result_df['Category'].nunique()}</div>
+                        <div style="
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #111827;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                        ">Categories</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                with metric_col3:
+                    most_frequent = result_df.iloc[0]['Keyword']
+                    most_count = result_df.iloc[0]['Count']
+                    st.markdown(f"""
+                    <div style="
+                        background: linear-gradient(135deg, #FFFFFF 0%, #F0FDF4 100%);
+                        border: 2px solid #10B981;
+                        border-radius: 12px;
+                        padding: 20px;
+                        text-align: center;
+                        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+                    ">
+                        <div style="
+                            font-size: 24px;
+                            font-weight: 700;
+                            color: #10B981;
+                            margin-bottom: 4px;
+                        ">{most_frequent}</div>
+                        <div style="
+                            font-size: 16px;
+                            font-weight: 600;
+                            color: #111827;
+                            margin-bottom: 4px;
+                        ">{most_count:,} mentions</div>
+                        <div style="
+                            font-size: 12px;
+                            font-weight: 500;
+                            color: #6B7280;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                        ">Top Keyword</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                # Professional Controls Section
+                st.markdown("""
+                <div style="
+                    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+                    border-radius: 16px;
+                    padding: 20px;
+                    margin: 24px 0;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                    border: 1px solid #E5E7EB;
+                ">
+                    <h3 style="
+                        color: #111827;
+                        margin: 0 0 16px 0;
+                        font-size: 18px;
+                        font-weight: 600;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    ">
+                        <span style="
+                            background: #6B7280;
+                            color: white;
+                            padding: 4px 8px;
+                            border-radius: 6px;
+                            font-size: 12px;
+                        ">⚙️</span>
+                        Analysis Controls
+                    </h3>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # Professional Controls Layout
+                control_col1, control_col2 = st.columns([2, 1])
+                with control_col1:
                     selected_category = st.selectbox(
-                        "Filter by category:",
+                        "Filter by Category:",
                         options=["(All)"] + sorted(result_df['Category'].unique().tolist()),
                         index=0,
+                        help="Select a specific category to analyze or view all categories"
                     )
-                with col2:
-                    max_keywords = st.number_input("Max keywords to show", min_value=10, max_value=500, value=100, step=10)
+                with control_col2:
+                    max_keywords = st.number_input(
+                        "Max Keywords to Display:", 
+                        min_value=10, 
+                        max_value=500, 
+                        value=100, 
+                        step=10,
+                        help="Maximum number of keywords to show in the table"
+                    )
                 
                 # Filter by category if selected
                 if selected_category != "(All)":
                     filtered_df = result_df[result_df['Category'] == selected_category]
+                    filter_text = f" for '{selected_category}' Category"
                 else:
                     filtered_df = result_df
+                    filter_text = " (All Categories)"
                 
-                # Limit results
-                display_df = filtered_df.head(max_keywords)
+                # Professional Data Table Section
+                st.markdown(f"""
+                <div style="
+                    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+                    border-radius: 16px;
+                    padding: 20px;
+                    margin: 24px 0;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                    border: 1px solid #E5E7EB;
+                ">
+                    <h3 style="
+                        color: #111827;
+                        margin: 0 0 16px 0;
+                        font-size: 18px;
+                        font-weight: 600;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    ">
+                        <span style="
+                            background: #ED1B2E;
+                            color: white;
+                            padding: 4px 8px;
+                            border-radius: 6px;
+                            font-size: 12px;
+                        ">📋</span>
+                        Keyword Analysis{filter_text}
+                    </h3>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # Professional Data Table
+                display_df = filtered_df.head(max_keywords).copy()
                 display_df = display_df.reset_index(drop=True)
                 display_df.index = display_df.index + 1
-                display_df.index.name = "Index"
+                display_df.index.name = "Rank"
+                
+                # Add percentage column for better insights
+                if len(display_df) > 0:
+                    display_df['Percentage'] = (display_df['Count'] / display_df['Count'].sum() * 100).round(2)
+                    display_df['Percentage'] = display_df['Percentage'].astype(str) + '%'
+                
                 st.dataframe(
                     display_df,
-                    height=400,
+                    height=450,
                     use_container_width=True
                 )
                 
-                # Display summary statistics
-                st.title("Summary Statistics")
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.metric("Total Keywords", len(result_df))
-                with col2:
-                    st.metric("Total Categories", result_df['Category'].nunique())
-                with col3:
-                    st.metric("Most Frequent Keyword", f"{result_df.iloc[0]['Keyword']} ({result_df.iloc[0]['Count']})")
+                # Professional Category Analysis Section
+                st.markdown("""
+                <div style="
+                    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+                    border-radius: 16px;
+                    padding: 20px;
+                    margin: 24px 0;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                    border: 1px solid #E5E7EB;
+                ">
+                    <h3 style="
+                        color: #111827;
+                        margin: 0 0 16px 0;
+                        font-size: 18px;
+                        font-weight: 600;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    ">
+                        <span style="
+                            background: #10B981;
+                            color: white;
+                            padding: 4px 8px;
+                            border-radius: 6px;
+                            font-size: 12px;
+                        ">🏷️</span>
+                        Category Performance Analysis
+                    </h3>
+                </div>
+                """, unsafe_allow_html=True)
                 
-                # Show top categories by keyword count
-                st.title("Top Categories by Keyword Count")
+                # Professional Category Analysis Table
                 category_counts = result_df.groupby('Category')['Count'].sum().sort_values(ascending=False).head(10)
                 category_df = pd.DataFrame({
                     'Category': category_counts.index,
-                    'Total Keywords': category_counts.values
+                    'Total Keywords': category_counts.values,
+                    'Avg Frequency': (category_counts.values / category_counts.sum() * 100).round(2)
                 })
-                # Left-align the numbers by treating them as strings for display
-                category_df['Total Keywords'] = category_df['Total Keywords'].astype(str)
+                category_df['Avg Frequency'] = category_df['Avg Frequency'].astype(str) + '%'
                 category_df = category_df.reset_index(drop=True)
                 category_df.index = category_df.index + 1
-                category_df.index.name = "Index"
-                st.dataframe(category_df, height=300, use_container_width=True)
+                category_df.index.name = "Rank"
+                
+                st.dataframe(category_df, height=350, use_container_width=True)
                 
             else:
                 st.warning("No keywords found in the cluster.txt file.")
@@ -1726,7 +2609,7 @@ with tab6:
 
 # tab 7: Spam Model
 with tab7:
-    st.title("Spam Detection & Comment Relevancy Analysis")
+    st.markdown('<h3 style="color:#000;">Spam Detection & Comment Relevancy Analysis</h3>', unsafe_allow_html=True)
     st.markdown("This module analyzes spam comments per video category and evaluates comment relevancy with video content.")
 
     # Check for required columns
@@ -1803,7 +2686,7 @@ with tab7:
     
     # Spam analysis by topic category
     if "topicCategories_clean" in df.columns:
-        st.title("Spam Rate Treemap by Topic Category")
+        st.markdown('<h3 style="color:#000;">Spam Rate Treemap by Topic Category</h3>', unsafe_allow_html=True)
         spam_topic_df = df.copy()
         spam_topic_df["is_spam"] = spam_topic_df["is_spam"].astype(str).str.lower().replace({"yes": "Spam", "no": "Non-Spam"})
         spam_topic_df["topicCategories_clean"] = spam_topic_df["topicCategories_clean"].apply(
