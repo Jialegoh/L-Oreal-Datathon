@@ -29,8 +29,8 @@ from model_utils import load_model_bundle, get_device
 from tab_overview import render_overview_tab
 from tab_sentiment import render_sentiment_tab
 from tab_classification import render_classification_tab
+from tab_trends import render_trends_tab
 from tab_additional import (
-    render_trends_tab, 
     render_wordcloud_tab, 
     render_cluster_tab, 
     render_spam_tab

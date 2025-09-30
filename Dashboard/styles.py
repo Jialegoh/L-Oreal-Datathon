@@ -609,114 +609,121 @@ def get_loreal_styles():
         color: var(--loreal-black) !important;
     }
 
-    /* PROFESSIONAL L'ORÉAL BRANDED TABLE STYLING */
+    /* MINIMALIST BLACK AND WHITE TABLE STYLING */
     .main .stDataFrame {
-        border-radius: 12px !important;
+        border-radius: 4px !important;
         overflow: hidden !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-        border: 1px solid #E5E7EB !important;
+        box-shadow: none !important;
+        border: 1px solid #cccccc !important;
     }
 
-    /* Professional header styling */
+    /* Minimalist header styling - clean and modern */
     .main .stDataFrame th {
-        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
-        color: white !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        padding: 16px 12px !important;
-        border: none !important;
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        padding: 12px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
+        border-left: none !important;
+        border-right: none !important;
         text-align: left !important;
     }
 
-    /* Professional cell styling */
+    /* Minimalist cell styling - clean black text on white */
     .main .stDataFrame td {
-        color: #111827 !important;
-        background-color: white !important;
-        padding: 14px 12px !important;
-        border-bottom: 1px solid #F3F4F6 !important;
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+        padding: 10px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
         border-left: none !important;
         border-right: none !important;
         font-size: 14px !important;
-        font-weight: 500 !important;
+        font-weight: normal !important;
     }
 
-    /* Alternating row colors for better readability */
+    /* Clean alternating rows - subtle grey */
     .main .stDataFrame tbody tr:nth-child(even) td {
-        background-color: #F9FAFB !important;
+        background-color: #f9f9f9 !important;
     }
 
     .main .stDataFrame tbody tr:hover td {
-        background-color: #FEF2F2 !important;
+        background-color: #f0f0f0 !important;
         transition: background-color 0.2s ease !important;
     }
 
-    /* Professional table styling for all tables */
+    /* Minimalist table styling for all tables */
     .main table {
-        border-radius: 12px !important;
+        border-radius: 4px !important;
         overflow: hidden !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-        border: 1px solid #E5E7EB !important;
+        box-shadow: none !important;
+        border: 1px solid #cccccc !important;
     }
 
     .main table th {
-        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
-        color: white !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        padding: 16px 12px !important;
-        border: none !important;
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        padding: 12px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
+        border-left: none !important;
+        border-right: none !important;
         text-align: left !important;
     }
 
     .main table td {
-        color: #111827 !important;
-        background-color: white !important;
-        padding: 14px 12px !important;
-        border-bottom: 1px solid #F3F4F6 !important;
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+        padding: 10px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
         border-left: none !important;
         border-right: none !important;
         font-size: 14px !important;
-        font-weight: 500 !important;
+        font-weight: normal !important;
     }
 
     .main table tbody tr:nth-child(even) td {
-        background-color: #F9FAFB !important;
+        background-color: #f9f9f9 !important;
     }
 
     .main table tbody tr:hover td {
-        background-color: #FEF2F2 !important;
+        background-color: #f0f0f0 !important;
         transition: background-color 0.2s ease !important;
     }
 
-    /* Additional professional styling for Streamlit dataframes */
+    /* Minimalist styling for Streamlit dataframes */
     .main [data-testid="stDataFrame"] {
-        border-radius: 12px !important;
+        border-radius: 4px !important;
         overflow: hidden !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        box-shadow: none !important;
+        border: 1px solid #cccccc !important;
     }
 
     .main [data-testid="stDataFrame"] th {
-        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
-        color: white !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        padding: 16px 12px !important;
-        border: none !important;
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        padding: 12px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
+        border-left: none !important;
+        border-right: none !important;
     }
 
     .main [data-testid="stDataFrame"] td {
-        color: #111827 !important;
-        background-color: white !important;
-        padding: 14px 12px !important;
-        border-bottom: 1px solid #F3F4F6 !important;
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+        padding: 10px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
         font-size: 14px !important;
-        font-weight: 500 !important;
+        font-weight: normal !important;
     }
 
     /* Professional scrollbar styling */
@@ -741,42 +748,43 @@ def get_loreal_styles():
     /* COMPREHENSIVE TABLES STYLING FOR ALL TABS */
     /* Ensure ALL table types across ALL tabs use L'Oréal branding */
     
-    /* Keyword tables styling */
+    /* Minimalist dataframe tables styling */
     .main .dataframe,
-    .main .dataframe table,
-    .main .dataframe th,
-    .main .dataframe td {
-        border-radius: 12px !important;
+    .main .dataframe table {
+        border-radius: 4px !important;
         overflow: hidden !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        box-shadow: none !important;
+        border: 1px solid #cccccc !important;
     }
     
     .main .dataframe th {
-        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
-        color: white !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        padding: 16px 12px !important;
-        border: none !important;
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        padding: 12px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
+        border-left: none !important;
+        border-right: none !important;
     }
     
     .main .dataframe td {
-        color: #111827 !important;
-        background-color: white !important;
-        padding: 14px 12px !important;
-        border-bottom: 1px solid #F3F4F6 !important;
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+        padding: 10px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
         font-size: 14px !important;
-        font-weight: 500 !important;
+        font-weight: normal !important;
     }
     
     .main .dataframe tbody tr:nth-child(even) td {
-        background-color: #F9FAFB !important;
+        background-color: #f9f9f9 !important;
     }
     
     .main .dataframe tbody tr:hover td {
-        background-color: #FEF2F2 !important;
+        background-color: #f0f0f0 !important;
         transition: background-color 0.2s ease !important;
     }
 
@@ -799,23 +807,25 @@ def get_loreal_styles():
     }
 
     .main .element-container table th {
-        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
-        color: white !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        padding: 16px 12px !important;
-        border: none !important;
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        padding: 12px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
+        border-left: none !important;
+        border-right: none !important;
     }
 
     .main .element-container table td {
-        color: #111827 !important;
-        background-color: white !important;
-        padding: 14px 12px !important;
-        border-bottom: 1px solid #F3F4F6 !important;
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+        padding: 10px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
         font-size: 14px !important;
-        font-weight: 500 !important;
+        font-weight: normal !important;
     }
 
     /* Spam detection tables */
@@ -837,31 +847,33 @@ def get_loreal_styles():
     }
 
     .main div table th {
-        background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%) !important;
-        color: white !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        padding: 16px 12px !important;
-        border: none !important;
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        padding: 12px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
+        border-left: none !important;
+        border-right: none !important;
     }
 
     .main div table td {
-        color: #111827 !important;
-        background-color: white !important;
-        padding: 14px 12px !important;
-        border-bottom: 1px solid #F3F4F6 !important;
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+        padding: 10px 8px !important;
+        border-bottom: 1px solid #cccccc !important;
         font-size: 14px !important;
-        font-weight: 500 !important;
+        font-weight: normal !important;
     }
 
     .main div table tbody tr:nth-child(even) td {
-        background-color: #F9FAFB !important;
+        background-color: #f9f9f9 !important;
     }
 
     .main div table tbody tr:hover td {
-        background-color: #FEF2F2 !important;
+        background-color: #f0f0f0 !important;
         transition: background-color 0.2s ease !important;
     }
 

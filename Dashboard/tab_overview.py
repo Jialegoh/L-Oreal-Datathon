@@ -88,7 +88,7 @@ def get_ai_insights(filtered_df):
         response = requests.post(
             url="https://openrouter.ai/api/v1/chat/completions",
             headers={
-                "Authorization": f"Bearer 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",
+                "Authorization": f"Bearer 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",
                 "Content-Type": "application/json",
                 "HTTP-Referer": "https://loreal-trendspotter.streamlit.app",
                 "X-Title": "L'Oréal TrendSpotter Dashboard",
@@ -230,8 +230,8 @@ def render_overview_tab(filtered_df, apply_brand_style):
         _render_spam_probability_card(filtered_df)
 
     # AI Insights for Key Metrics
-    st.markdown("### 🤖 AI Business Insights - Key Metrics")
-    st.info(ai_insights["key_metrics"])
+    with st.expander("🤖 AI Business Insights - Key Metrics", expanded=True):
+        st.info(ai_insights["key_metrics"])
 
     st.divider()
 
@@ -285,12 +285,12 @@ def render_overview_tab(filtered_df, apply_brand_style):
     # AI Insights for Distribution Analysis
     dist_col1, dist_col2 = st.columns(2)
     with dist_col1:
-        st.markdown("### 🤖 Quality Distribution Insights")
-        st.info(ai_insights["quality_distribution"])
+        with st.expander("🤖 Quality Distribution Insights", expanded=True):
+            st.info(ai_insights["quality_distribution"])
     
     with dist_col2:
-        st.markdown("### 🤖 Relevance Distribution Insights") 
-        st.info(ai_insights["relevance_distribution"])
+        with st.expander("🤖 Relevance Distribution Insights", expanded=True):
+            st.info(ai_insights["relevance_distribution"])
     
     st.divider()
     
@@ -298,8 +298,8 @@ def render_overview_tab(filtered_df, apply_brand_style):
     _render_top_categories(filtered_df, apply_brand_style)
     
     # AI Insights for Top Categories
-    st.markdown("### 🤖 Strategic Category Insights")
-    st.info(ai_insights["top_categories"])
+    with st.expander("🤖 Strategic Category Insights", expanded=True):
+        st.info(ai_insights["top_categories"])
 
 
 def _render_quality_metric_card(filtered_df):
