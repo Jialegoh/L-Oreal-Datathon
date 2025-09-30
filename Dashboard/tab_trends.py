@@ -10,6 +10,7 @@ import plotly.graph_objects as go
 from datetime import datetime, timedelta
 import numpy as np
 from pathlib import Path
+import os
 
 
 def render_trends_tab(filtered_df, apply_brand_style):
@@ -43,6 +44,31 @@ def render_trends_tab(filtered_df, apply_brand_style):
         st.error(f"❌ Error creating trends analysis: {str(e)}")
         st.info("Please check your data format and try again.")
 
+
+def _resolve_ts_path(filename: str) -> Path:
+    """Resolve TimeSeries CSV path with sensible fallbacks.
+
+    Order tried:
+    1) Env var LOREAL_TS_DIR/filename (if set)
+    2) ../AI_Model/TimeSeries/filename relative to this file
+    3) C:/L-Oreal-Datathon/AI_Model/TimeSeries/filename (Windows default)
+    """
+    # 1) Environment variable override
+    ts_dir = os.getenv("LOREAL_TS_DIR")
+    if ts_dir:
+        candidate = Path(ts_dir) / filename
+        if candidate.exists():
+            return candidate
+
+    # 2) Relative to repo (Dashboard/..)
+    dashboard_dir = Path(__file__).parent
+    candidate2 = (dashboard_dir / ".." / "AI_Model" / "TimeSeries" / filename).resolve()
+    if candidate2.exists():
+        return candidate2
+
+    # 3) Default C: location as a last resort
+    candidate3 = Path("C:/L-Oreal-Datathon/AI_Model/TimeSeries") / filename
+    return candidate3
 
 def prepare_trends_data(df, date_col):
     """Prepare and clean data for trend analysis"""
@@ -103,7 +129,7 @@ def display_date_range_info(df_trends):
 def load_time_series_data():
     """Load pre-processed time series data from CSV"""
     try:
-        data_path = Path("D:/L-Oreal-Datathon/AI_Model/TimeSeries/time_series_cluster_analysis.csv")
+        data_path = _resolve_ts_path("time_series_cluster_analysis.csv")
         if data_path.exists():
             df = pd.read_csv(data_path)
             
@@ -598,21 +624,21 @@ def render_advanced_analytics(df_trends, apply_brand_style):
     
     try:
         # Load hourly patterns from CSV
-        hourly_csv_path = "D:/L-Oreal-Datathon/AI_Model/TimeSeries/hourly_comment_patterns.csv"
+        hourly_csv_path = _resolve_ts_path("hourly_comment_patterns.csv")
         hourly_data = pd.read_csv(hourly_csv_path)
     except:
         pass
     
     try:
         # Load weekday patterns from CSV
-        weekday_csv_path = "D:/L-Oreal-Datathon/AI_Model/TimeSeries/weekday_comment_patterns.csv"
+        weekday_csv_path = _resolve_ts_path("weekday_comment_patterns.csv")
         weekday_data = pd.read_csv(weekday_csv_path)
     except:
         pass
     
     try:
         # Load daily patterns from CSV
-        daily_csv_path = "D:/L-Oreal-Datathon/AI_Model/TimeSeries/daily_comment_patterns.csv"
+        daily_csv_path = _resolve_ts_path("daily_comment_patterns.csv")
         daily_data = pd.read_csv(daily_csv_path)
         daily_data['date'] = pd.to_datetime(daily_data['date'])
         daily_counts = daily_data.sort_values('date')
